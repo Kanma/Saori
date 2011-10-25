@@ -34,36 +34,36 @@ set(OGRE_BUILD_PLUGIN_PCZ FALSE)
 set(OGRE_BUILD_PLUGIN_PFX TRUE)
 set(OGRE_BUILD_PLUGIN_CG TRUE)
 
-# # Import XMake
-# if (NOT EXISTS "${ATHENA_DEPENDENCIES_DIR}/xmake/XMake.cmake")
-#     message(FATAL_ERROR
-# "Missing dependency: XMake
-# MASH Simulator requires the following dependencies:
-#    - XMake
-#    - Athena-Math
-#    - Athena-Core
-#    - Athena-Entities
-#    - Athena-Graphics
-#    - Athena-Physics
-#    - Athena-Inputs
-#    - Athena-Framework
-#    - UnitTest++
-#    - Ogre
-#    - Bullet
-#    - FreeImage
-#    - FreeType
-#    - ZLib
-#    - zziplib
-# They are provided as GIT submodules of this repository.
-# Did you forgot to execute the following commands?
-#    git submodule init
-#    git submodule update")
-# endif()
-# 
-# include("${ATHENA_DEPENDENCIES_DIR}/xmake/XMake.cmake")
+# Import XMake
+if (NOT EXISTS "${ATHENA_DEPENDENCIES_DIR}/xmake/XMake.cmake")
+    message(FATAL_ERROR
+"Missing dependency: XMake
+Saori requires the following dependencies:
+   - XMake
+   - Athena-Math
+   - Athena-Core
+   - Athena-Entities
+   - Athena-Graphics
+   - Athena-Physics
+   - Athena-Inputs
+   - Athena-Framework
+   - UnitTest++
+   - Ogre
+   - Bullet
+   - FreeImage
+   - FreeType
+   - ZLib
+   - zziplib
+They are provided as GIT submodules of this repository.
+Did you forgot to execute the following commands?
+   git submodule init
+   git submodule update")
+endif()
+
+include("${ATHENA_DEPENDENCIES_DIR}/xmake/XMake.cmake")
 
 # Process the dependencies
-# add_subdirectory(dependencies)
+add_subdirectory(dependencies)
 
 # Subdirectories to process
 add_subdirectory(src)

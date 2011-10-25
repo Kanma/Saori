@@ -1,5 +1,5 @@
 # Setup the search paths
-# xmake_include_directories(ATHENA_FRAMEWORK)
+xmake_include_directories(ATHENA_FRAMEWORK)
 include_directories("${SAORI_SOURCE_DIR}/include"
                     "${SAORI_SOURCE_DIR}/dependencies"
                     "${SAORI_SOURCE_DIR}/dependencies/include"
@@ -15,12 +15,12 @@ set(XIBS Application
 )
 
 # List the link directories
-# xmake_link_directories(ATHENA_FRAMEWORK)
+xmake_link_directories(ATHENA_FRAMEWORK)
 
 # Create and link the executable
 add_executable(saori ${SRCS})
-# xmake_target_link_libraries(saori ATHENA_FRAMEWORK)
-target_link_libraries(saori "-framework Cocoa")
+xmake_target_link_libraries(saori ATHENA_FRAMEWORK)
+# target_link_libraries(saori "-framework Cocoa")
 
 # Create .app bundle
 set_property(TARGET saori PROPERTY MACOSX_BUNDLE TRUE)
@@ -51,35 +51,35 @@ foreach(xib ${XIBS})
 
 endforeach()
 
-# # Symlink the Frameworks
-# add_custom_command(TARGET saori POST_BUILD
-#   COMMAND mkdir ARGS -p ${CONTENTS_PATH}/Frameworks
-#   COMMAND ln ARGS -s -f ${SAORI_BINARY_DIR}/bin/Ogre.framework ${CONTENTS_PATH}/Frameworks/
-#   COMMAND ln ARGS -s -f ${SAORI_BINARY_DIR}/bin/Cg.framework ${CONTENTS_PATH}/Frameworks/
-# )
-# 
-# # Symlink the configuration files
-# add_custom_command(TARGET saori POST_BUILD
-#   COMMAND mkdir ARGS -p ${CONTENTS_PATH}/Resources
-#   COMMAND ln ARGS -s -f ${SAORI_BINARY_DIR}/bin/plugins.cfg ${CONTENTS_PATH}/Resources/
-#   COMMAND ln ARGS -s -f ${SAORI_BINARY_DIR}/bin/resources.cfg ${CONTENTS_PATH}/Resources/
-#   COMMAND ln ARGS -s -f ${SAORI_BINARY_DIR}/bin/athena.cfg ${CONTENTS_PATH}/Resources/
-#   )
-# 
-# # Symlink the plugins
-# add_custom_command(TARGET saori POST_BUILD
-#   COMMAND mkdir ARGS -p ${CONTENTS_PATH}/Plugins
-#   COMMAND ln ARGS -s -f ${SAORI_BINARY_DIR}/bin/RenderSystem_GL.dylib ${CONTENTS_PATH}/Plugins/
-#   COMMAND ln ARGS -s -f ${SAORI_BINARY_DIR}/bin/Plugin_CgProgramManager.dylib ${CONTENTS_PATH}/Plugins/
-#   COMMAND ln ARGS -s -f ${SAORI_BINARY_DIR}/bin/Plugin_OctreeSceneManager.dylib ${CONTENTS_PATH}/Plugins/
-#   COMMAND ln ARGS -s -f ${SAORI_BINARY_DIR}/bin/Plugin_ParticleFX.dylib ${CONTENTS_PATH}/Plugins/
-# )
-# 
-# # Symlink the dynamic libraries
-# add_custom_command(TARGET saori POST_BUILD
-#   COMMAND mkdir ARGS -p ${CONTENTS_PATH}/Libraries
-#   COMMAND ln ARGS -s -f ${SAORI_BINARY_DIR}/bin/libAthena.dylib ${CONTENTS_PATH}/Libraries/
-# )
+# Symlink the Frameworks
+add_custom_command(TARGET saori POST_BUILD
+  COMMAND mkdir ARGS -p ${CONTENTS_PATH}/Frameworks
+  COMMAND ln ARGS -s -f ${SAORI_BINARY_DIR}/bin/Ogre.framework ${CONTENTS_PATH}/Frameworks/
+  COMMAND ln ARGS -s -f ${SAORI_BINARY_DIR}/bin/Cg.framework ${CONTENTS_PATH}/Frameworks/
+)
+
+# Symlink the configuration files
+add_custom_command(TARGET saori POST_BUILD
+  COMMAND mkdir ARGS -p ${CONTENTS_PATH}/Resources
+  COMMAND ln ARGS -s -f ${SAORI_BINARY_DIR}/bin/plugins.cfg ${CONTENTS_PATH}/Resources/
+  COMMAND ln ARGS -s -f ${SAORI_BINARY_DIR}/bin/resources.cfg ${CONTENTS_PATH}/Resources/
+  COMMAND ln ARGS -s -f ${SAORI_BINARY_DIR}/bin/athena.cfg ${CONTENTS_PATH}/Resources/
+  )
+
+# Symlink the plugins
+add_custom_command(TARGET saori POST_BUILD
+  COMMAND mkdir ARGS -p ${CONTENTS_PATH}/Plugins
+  COMMAND ln ARGS -s -f ${SAORI_BINARY_DIR}/bin/RenderSystem_GL.dylib ${CONTENTS_PATH}/Plugins/
+  COMMAND ln ARGS -s -f ${SAORI_BINARY_DIR}/bin/Plugin_CgProgramManager.dylib ${CONTENTS_PATH}/Plugins/
+  COMMAND ln ARGS -s -f ${SAORI_BINARY_DIR}/bin/Plugin_OctreeSceneManager.dylib ${CONTENTS_PATH}/Plugins/
+  COMMAND ln ARGS -s -f ${SAORI_BINARY_DIR}/bin/Plugin_ParticleFX.dylib ${CONTENTS_PATH}/Plugins/
+)
+
+# Symlink the dynamic libraries
+add_custom_command(TARGET saori POST_BUILD
+  COMMAND mkdir ARGS -p ${CONTENTS_PATH}/Libraries
+  COMMAND ln ARGS -s -f ${SAORI_BINARY_DIR}/bin/libAthena.dylib ${CONTENTS_PATH}/Libraries/
+)
 
 # Set the RPATH
 set_target_properties(saori PROPERTIES LINK_FLAGS "${XMAKE_ATHENA_FRAMEWORK_LINK_FLAGS} -Wl,-rpath,@loader_path/../Frameworks,-rpath,@loader_path/../Libraries")
