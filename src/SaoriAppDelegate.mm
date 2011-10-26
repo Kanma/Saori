@@ -43,12 +43,22 @@ using Ogre::WindowEventUtilities;
 	{
 	    WindowEventUtilities::messagePump();
 		engine.getTaskManager()->step(20000);
-        // NSLog(@"stepOneFrame");
 	}
 	catch (Ogre::Exception& e)
 	{
 		std::cerr << "An exception has occured: " << e.getFullDescription().c_str() << std::endl;
 	}
+}
+
+
+- (IBAction) openFile:(id)sender
+{
+    NSOpenPanel* op = [NSOpenPanel openPanel];
+    if ([op runModal] == NSOKButton)
+    {
+        NSString* filename = [op filename];
+        pMeshViewerState->loadMesh([filename UTF8String]);
+    }
 }
 
 @end

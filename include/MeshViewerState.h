@@ -14,6 +14,7 @@ public:
 
 	//_____ Methods __________
 public:
+    bool loadMesh(const std::string& strFileName);
     
 	
 	//_____ Methods to be overriden by each state __________
@@ -28,10 +29,12 @@ public:
 
 	//_____ Attributes __________
 private:
-	Athena::Entities::Scene*  m_pScene;
-	Athena::Entities::Entity* m_pEntity;
-    Athena::Entities::Entity* m_pCameraController;
-    Ogre::Viewport*           m_pViewport;
+	Athena::Entities::Scene*          m_pScene;
+	Athena::Entities::Entity*         m_pEntity;
+    Athena::Entities::Entity*         m_pCameraController;
+    Athena::Entities::Transforms*     m_pCameraAxis;
+    Athena::Graphics::Visual::Camera* m_pCamera;
+    Ogre::Viewport*                   m_pViewport;
 };
 
 #endif

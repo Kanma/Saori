@@ -16,7 +16,11 @@
     MeshViewerState* pMeshViewerState;
 }
 
+// Outlets
 @property (assign) IBOutlet NSWindow* window;
 @property (assign) IBOutlet OgreView* ogreView;
+
+// Actions
+- (IBAction) openFile:(id)sender;
 
 @end
