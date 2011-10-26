@@ -1,0 +1,262 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		ED9AF5DD1457E450004259CB /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED9AF5DC1457E450004259CB /* Cocoa.framework */; };
+		ED9AF5FB1457E471004259CB /* Application.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED9AF5F91457E471004259CB /* Application.xib */; };
+		ED9AF5FC1457E471004259CB /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = ED9AF5FA1457E471004259CB /* Info.plist */; };
+		ED9AF5FF1457E518004259CB /* SaoriAppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = ED9AF5FE1457E518004259CB /* SaoriAppDelegate.mm */; };
+		EDE998CF1457E7C300C72C3E /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = EDE998CE1457E7C300C72C3E /* main.mm */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		ED9AF5D81457E450004259CB /* Saori.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Saori.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		ED9AF5DC1457E450004259CB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		ED9AF5DF1457E450004259CB /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		ED9AF5E01457E450004259CB /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		ED9AF5E11457E450004259CB /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		ED9AF5F91457E471004259CB /* Application.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Application.xib; sourceTree = SOURCE_ROOT; };
+		ED9AF5FA1457E471004259CB /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = SOURCE_ROOT; };
+		ED9AF5FD1457E4A6004259CB /* SaoriAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SaoriAppDelegate.h; path = ../include/SaoriAppDelegate.h; sourceTree = SOURCE_ROOT; };
+		ED9AF5FE1457E518004259CB /* SaoriAppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = SaoriAppDelegate.mm; path = ../src/SaoriAppDelegate.mm; sourceTree = SOURCE_ROOT; };
+		EDE998CE1457E7C300C72C3E /* main.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = main.mm; path = ../src/main.mm; sourceTree = SOURCE_ROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		ED9AF5D51457E450004259CB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				ED9AF5DD1457E450004259CB /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		ED9AF5CD1457E450004259CB = {
+			isa = PBXGroup;
+			children = (
+				ED9AF5E21457E450004259CB /* Saori */,
+				ED9AF5DB1457E450004259CB /* Frameworks */,
+				ED9AF5D91457E450004259CB /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		ED9AF5D91457E450004259CB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				ED9AF5D81457E450004259CB /* Saori.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		ED9AF5DB1457E450004259CB /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				ED9AF5DC1457E450004259CB /* Cocoa.framework */,
+				ED9AF5DE1457E450004259CB /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		ED9AF5DE1457E450004259CB /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				ED9AF5DF1457E450004259CB /* AppKit.framework */,
+				ED9AF5E01457E450004259CB /* CoreData.framework */,
+				ED9AF5E11457E450004259CB /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		ED9AF5E21457E450004259CB /* Saori */ = {
+			isa = PBXGroup;
+			children = (
+				EDE998CE1457E7C300C72C3E /* main.mm */,
+				ED9AF5FE1457E518004259CB /* SaoriAppDelegate.mm */,
+				ED9AF5FD1457E4A6004259CB /* SaoriAppDelegate.h */,
+				ED9AF5F91457E471004259CB /* Application.xib */,
+				ED9AF5FA1457E471004259CB /* Info.plist */,
+			);
+			path = Saori;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		ED9AF5D71457E450004259CB /* Saori */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = ED9AF5F61457E450004259CB /* Build configuration list for PBXNativeTarget "Saori" */;
+			buildPhases = (
+				ED9AF5D41457E450004259CB /* Sources */,
+				ED9AF5D51457E450004259CB /* Frameworks */,
+				ED9AF5D61457E450004259CB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Saori;
+			productName = Saori;
+			productReference = ED9AF5D81457E450004259CB /* Saori.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		ED9AF5CF1457E450004259CB /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				ORGANIZATIONNAME = Idiap;
+			};
+			buildConfigurationList = ED9AF5D21457E450004259CB /* Build configuration list for PBXProject "Saori" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = ED9AF5CD1457E450004259CB;
+			productRefGroup = ED9AF5D91457E450004259CB /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				ED9AF5D71457E450004259CB /* Saori */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		ED9AF5D61457E450004259CB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				ED9AF5FB1457E471004259CB /* Application.xib in Resources */,
+				ED9AF5FC1457E471004259CB /* Info.plist in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		ED9AF5D41457E450004259CB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				ED9AF5FF1457E518004259CB /* SaoriAppDelegate.mm in Sources */,
+				EDE998CF1457E7C300C72C3E /* main.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		ED9AF5F41457E450004259CB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		ED9AF5F51457E450004259CB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		ED9AF5F71457E450004259CB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../build/bin\"",
+				);
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Saori/Saori-Prefix.pch";
+				HEADER_SEARCH_PATHS = (
+					"../../dependencies/Athena-Framework/include/",
+					../../dependencies/ogre/include/,
+				);
+				INFOPLIST_FILE = Info.plist;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		ED9AF5F81457E450004259CB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../build/bin\"",
+				);
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Saori/Saori-Prefix.pch";
+				HEADER_SEARCH_PATHS = (
+					"../../dependencies/Athena-Framework/include/",
+					../../dependencies/ogre/include/,
+				);
+				INFOPLIST_FILE = Info.plist;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		ED9AF5D21457E450004259CB /* Build configuration list for PBXProject "Saori" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				ED9AF5F41457E450004259CB /* Debug */,
+				ED9AF5F51457E450004259CB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		ED9AF5F61457E450004259CB /* Build configuration list for PBXNativeTarget "Saori" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				ED9AF5F71457E450004259CB /* Debug */,
+				ED9AF5F81457E450004259CB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = ED9AF5CF1457E450004259CB /* Project object */;
+}

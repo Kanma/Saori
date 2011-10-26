@@ -8,6 +8,7 @@ include_directories("${SAORI_SOURCE_DIR}/include"
 # List the source files
 set(SRCS main.mm
          SaoriAppDelegate.mm
+         MeshViewerState.cpp
 )
 
 # List the Interface Builder Files

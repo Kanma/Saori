@@ -1,0 +1,21 @@
+[Athena]
+Config = ogre.cfg
+Plugins = plugins.cfg
+Resources = resources.cfg
+
+[Log]
+Athena = athena.log.xml
+Kind = XML
+Ogre = ogre.log
+RedirectOgreLog = false
+
+[Inputs]
+Enable = false
+
+[Physics]
+Enable = false
+NbMaxSubSteps = 1
+FixedTimeStep = 0.016667
+
+[DefaultWindow]
+Enable = false
