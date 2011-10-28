@@ -29,12 +29,13 @@ public:
 
 	//_____ Attributes __________
 private:
-	Athena::Entities::Scene*          m_pScene;
-	Athena::Entities::Entity*         m_pEntity;
-    Athena::Entities::Entity*         m_pCameraController;
-    Athena::Entities::Transforms*     m_pCameraAxis;
-    Athena::Graphics::Visual::Camera* m_pCamera;
-    Ogre::Viewport*                   m_pViewport;
+	Athena::Entities::Scene*                m_pScene;
+	Athena::Entities::Entity*               m_pEntity;
+    Athena::Entities::Entity*               m_pCameraController;
+    Athena::Entities::Transforms*           m_pCameraAxis;
+    Athena::Graphics::Visual::Camera*       m_pCamera;
+    Athena::Graphics::Visual::PointLight*   m_pCameraLight;
+    Ogre::Viewport*                         m_pViewport;
 };
 
 #endif

@@ -8,6 +8,7 @@
 #include <Athena-Graphics/Visual/Camera.h>
 #include <Athena-Graphics/Visual/World.h>
 #include <Athena-Graphics/Visual/Object.h>
+#include <Athena-Graphics/Visual/PointLight.h>
 #include <Athena-Math/Vector3.h>
 #include <Athena-Math/MathUtils.h>
 #include <Ogre/OgreRoot.h>
@@ -31,7 +32,7 @@ static const char* __CONTEXT__ = "Mesh Viewer State";
 
 MeshViewerState::MeshViewerState()
 : m_pScene(0), m_pEntity(0), m_pCameraController(0), m_pCameraAxis(0), m_pCamera(0),
-  m_pViewport(0)
+  m_pCameraLight(0), m_pViewport(0)
 {
 }
 
@@ -79,27 +80,6 @@ bool MeshViewerState::loadMesh(const std::string& strFileName)
         m_pCameraController->getTransforms()->setPosition(aabb.getCenter());
         m_pCameraAxis->setPosition(0.0f, 0.0f, std::max(pObject->getOgreEntity()->getBoundingRadius() / MathUtils::Tan(angle),
                                                         pObject->getOgreEntity()->getBoundingRadius() + m_pCamera->getNearClipDistance()));
-
-        //
-        //         Vector3 size = aabb.getHalfSize();
-        //
-        //         Radian fovy = m_pCamera->getFOVy() * 0.5f;
-        //         std::cout << __LINE__ << "fovy = " << fovy.valueDegrees() << std::endl;
-        //         Real dy = size.y;
-        //         std::cout << __LINE__ << "dy = " << dy << std::endl;
-        //         Real dz1 = dy / MathUtils::Tan(fovy);
-        //         std::cout << __LINE__ << "dz1 = " << dz1 << std::endl;
-        //
-        //         Radian fovx = fovy * m_pViewport->getActualWidth() / m_pViewport->getActualHeight();
-        //         std::cout << __LINE__ << "fovx = " << fovx.valueDegrees() << std::endl;
-        //         Real dx = size.x;
-        //         std::cout << __LINE__ << "dx = " << dx << std::endl;
-        //         Real dz2 = dx / MathUtils::Tan(fovx);
-        //         std::cout << __LINE__ << "dz2 = " << dz2 << std::endl;
-        //
-        //         std::cout << __LINE__ << "size.z = " << size.z << std::endl;
-        //
-        // m_pCameraAxis->setPosition(0.0f, 0.0f, 1.1f * std::max(size.z, std::max(dz1, dz2)));
     }
 }
 
@@ -118,7 +98,7 @@ void MeshViewerState::enter()
     pSceneManager->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_ADDITIVE);
     pSceneManager->setShadowFarDistance(20.0f);
 
-    pVisualWorld->setAmbientLight(Color(0.6f, 0.6f, 0.6f));
+    pVisualWorld->setAmbientLight(Color(0.5f, 0.5f, 0.5f));
 
     m_pScene->show();
 
@@ -133,6 +113,10 @@ void MeshViewerState::enter()
     m_pCamera->setNearClipDistance(0.1f);
     m_pCamera->setFarClipDistance(1000.0f);
     m_pCamera->setFOVy(Degree(45.0f));
+
+    m_pCameraLight = new PointLight("Light", m_pCameraController->getComponentsList());
+    m_pCameraLight->setTransforms(m_pCameraAxis);
+    m_pCameraLight->setDiffuseColor(Color(0.7f, 0.7f, 0.7f, 0.7f));
 
     Ogre::RenderWindow* pWindow = Engine::getSingletonPtr()->getMainWindow();
 
@@ -151,6 +135,7 @@ void MeshViewerState::exit()
 
     m_pCameraController = 0;
     m_pCameraAxis       = 0;
+    m_pCameraLight      = 0;
     m_pCamera           = 0;
     m_pEntity           = 0;
     m_pScene            = 0;
