@@ -2,6 +2,7 @@
 #define _MESHVIEWERSTATE_H_
 
 #include <Athena/GameStates/IGameState.h>
+#import "controls/View3D.h"
 
 
 class MeshViewerState: public Athena::GameStates::IGameState
@@ -29,13 +30,8 @@ public:
 
 	//_____ Attributes __________
 private:
-	Athena::Entities::Scene*                m_pScene;
-	Athena::Entities::Entity*               m_pEntity;
-    Athena::Entities::Entity*               m_pCameraController;
-    Athena::Entities::Transforms*           m_pCameraAxis;
-    Athena::Graphics::Visual::Camera*       m_pCamera;
-    Athena::Graphics::Visual::PointLight*   m_pCameraLight;
-    Ogre::Viewport*                         m_pViewport;
+    View3D*                     m_view;
+	Athena::Entities::Entity*   m_pEntity;
 };
 
 #endif
