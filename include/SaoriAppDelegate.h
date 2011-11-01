@@ -1,7 +1,7 @@
 #import <Cocoa/Cocoa.h>
 #import <Athena/Engine.h>
-#import <Ogre/OSX/OgreOSXCocoaView.h>
-#import "MeshViewerState.h"
+#import <MeshViewerState.h>
+#import <controls/View3D.h>
 
 
 @interface SaoriAppDelegate : NSObject <NSApplicationDelegate>
@@ -9,7 +9,8 @@
 @private
     // UI
     NSWindow* window;
-	OgreView* ogreView;
+    OgreView* mainOgreView;
+	View3D*   view3D;
 
     // Attributes
     Athena::Engine   engine;
@@ -18,7 +19,8 @@
 
 // Outlets
 @property (assign) IBOutlet NSWindow* window;
-@property (assign) IBOutlet OgreView* ogreView;
+@property (assign) IBOutlet OgreView* mainOgreView;
+@property (assign) IBOutlet View3D*   view3D;
 
 // Actions
 - (IBAction) openFile:(id)sender;

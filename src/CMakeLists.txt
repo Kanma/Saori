@@ -8,6 +8,7 @@ include_directories("${SAORI_SOURCE_DIR}/include"
 # List the source files
 set(SRCS main.mm
          SaoriAppDelegate.mm
+         Context.mm
          MeshViewerState.mm
          controls/View3D.mm
 )
@@ -22,7 +23,6 @@ xmake_link_directories(ATHENA_FRAMEWORK)
 # Create and link the executable
 add_executable(saori ${SRCS})
 xmake_target_link_libraries(saori ATHENA_FRAMEWORK)
-# target_link_libraries(saori "-framework Cocoa")
 
 # Create .app bundle
 set_property(TARGET saori PROPERTY MACOSX_BUNDLE TRUE)

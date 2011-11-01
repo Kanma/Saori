@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D4B58B9A14601D6E007CFF84 /* View3D.mm in Sources */ = {isa = PBXBuildFile; fileRef = D4B58B9914601D6E007CFF84 /* View3D.mm */; };
 		ED9AF5DD1457E450004259CB /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED9AF5DC1457E450004259CB /* Cocoa.framework */; };
 		ED9AF5FB1457E471004259CB /* Application.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED9AF5F91457E471004259CB /* Application.xib */; };
 		ED9AF5FC1457E471004259CB /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = ED9AF5FA1457E471004259CB /* Info.plist */; };
@@ -15,6 +16,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		D4B58B9714601D4C007CFF84 /* View3D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = View3D.h; path = ../include/controls/View3D.h; sourceTree = SOURCE_ROOT; };
+		D4B58B9914601D6E007CFF84 /* View3D.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = View3D.mm; path = ../src/controls/View3D.mm; sourceTree = SOURCE_ROOT; };
 		ED9AF5D81457E450004259CB /* Saori.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Saori.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED9AF5DC1457E450004259CB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		ED9AF5DF1457E450004259CB /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -78,6 +81,8 @@
 		ED9AF5E21457E450004259CB /* Saori */ = {
 			isa = PBXGroup;
 			children = (
+				D4B58B9914601D6E007CFF84 /* View3D.mm */,
+				D4B58B9714601D4C007CFF84 /* View3D.h */,
 				EDE998CE1457E7C300C72C3E /* main.mm */,
 				ED9AF5FE1457E518004259CB /* SaoriAppDelegate.mm */,
 				ED9AF5FD1457E4A6004259CB /* SaoriAppDelegate.h */,
@@ -151,6 +156,7 @@
 			files = (
 				ED9AF5FF1457E518004259CB /* SaoriAppDelegate.mm in Sources */,
 				EDE998CF1457E7C300C72C3E /* main.mm in Sources */,
+				D4B58B9A14601D6E007CFF84 /* View3D.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

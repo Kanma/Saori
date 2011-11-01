@@ -1,8 +1,4 @@
-#ifndef _MESHVIEWERSTATE_H_
-#define _MESHVIEWERSTATE_H_
-
-#include <Athena/GameStates/IGameState.h>
-#import "controls/View3D.h"
+#import <Athena/GameStates/IGameState.h>
 
 
 class MeshViewerState: public Athena::GameStates::IGameState
@@ -30,8 +26,5 @@ public:
 
 	//_____ Attributes __________
 private:
-    View3D*                     m_view;
-	Athena::Entities::Entity*   m_pEntity;
+	Athena::Entities::Entity* m_pEntity;
 };
-
-#endif

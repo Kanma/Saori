@@ -1,10 +1,10 @@
 #import <controls/View3D.h>
-#import <Athena-Graphics/Visual/World.h>
+#import <Athena/Engine.h>
 #import <Athena-Graphics/Visual/Object.h>
 #import <Athena-Math/Vector3.h>
 #import <Athena-Math/MathUtils.h>
-#import <Ogre/OgreSceneManager.h>
-#include <Ogre/OgreRenderWindow.h>
+#import <Ogre/OgreRoot.h>
+#import <Ogre/OgreRenderWindow.h>
 
 
 using namespace Athena;
@@ -17,12 +17,6 @@ using namespace Athena::Math;
 @implementation View3D
 
 /************************************** PROPERTIES **************************************/
-
-- (Scene*) scene
-{
-    return pScene;
-}
-
 
 - (void) setAspectRatio:(Real)value
 {
@@ -90,56 +84,56 @@ using namespace Athena::Math;
 
 /*************************************** METHODS ****************************************/
 
-- (id) initWithRenderWindow:(Ogre::RenderWindow*)window
+- (void) setup
 {
-    if (self = [super init])
-    {
-        pWindow = window;
-        
-        // Create the scene
-        pScene = new Scene("MeshViewer");
+    NSRect frame = [self frame];
+    
+    pWindow = Engine::getSingletonPtr()->createRenderWindow(
+                                                    (size_t) self, "3D view",
+                                                    (int) frame.size.width,
+                                                    (int) frame.size.height,
+                                                    false);
+    
+    // Retrieve the scene
+    Scene* pScene = [Context context].scene;
 
-        Visual::World* pVisualWorld = new Visual::World("", pScene->getComponentsList());
+    // Create the camera and the viewport
+    pCameraController = pScene->create("CameraController");
 
-        Ogre::SceneManager* pSceneManager = pVisualWorld->createSceneManager(Ogre::ST_GENERIC);
-        pSceneManager->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_ADDITIVE);
-        pSceneManager->setShadowFarDistance(20.0f);
+    pCameraAxis = new Transforms("CameraTransforms", pCameraController->getComponentsList());
+    pCameraAxis->translate(0.0f, 0.0f, 10.0f);
 
-        pVisualWorld->setAmbientLight(Color(0.5f, 0.5f, 0.5f));
+    pCamera = new Camera("Camera", pCameraController->getComponentsList());
+    pCamera->setTransforms(pCameraAxis);
+    pCamera->setNearClipDistance(0.1f);
+    pCamera->setFarClipDistance(1000.0f);
+    pCamera->setFOVy(Degree(45.0f));
 
-        pScene->show();
+    pCameraLight = new PointLight("Light", pCameraController->getComponentsList());
+    pCameraLight->setTransforms(pCameraAxis);
+    pCameraLight->setDiffuseColor(Color(0.7f, 0.7f, 0.7f, 0.7f));
 
-        // Create the camera and the viewport
-        pCameraController = pScene->create("CameraController");
+    pCamera->setAspectRatio(float(window->getWidth()) / window->getHeight());
 
-        pCameraAxis = new Transforms("CameraTransforms", pCameraController->getComponentsList());
-        pCameraAxis->translate(0.0f, 0.0f, 10.0f);
-
-        pCamera = new Camera("Camera", pCameraController->getComponentsList());
-        pCamera->setTransforms(pCameraAxis);
-        pCamera->setNearClipDistance(0.1f);
-        pCamera->setFarClipDistance(1000.0f);
-        pCamera->setFOVy(Degree(45.0f));
-
-        pCameraLight = new PointLight("Light", pCameraController->getComponentsList());
-        pCameraLight->setTransforms(pCameraAxis);
-        pCameraLight->setDiffuseColor(Color(0.7f, 0.7f, 0.7f, 0.7f));
-
-        pCamera->setAspectRatio(float(window->getWidth()) / window->getHeight());
-
-        pViewport = pCamera->createViewport(window);
-        pViewport->setBackgroundColour(Ogre::ColourValue(0.1f, 0.1f, 0.1f));
-    }
-
-    return self;
+    pViewport = pCamera->createViewport(window);
+    pViewport->setBackgroundColour(Ogre::ColourValue(0.1f, 0.1f, 0.1f));
+    
+    bManipulatingCamera = NO;
+    bMovingCamera = NO;
+    bRotatingCamera = NO;
+    bZoomingCamera = NO;
+    vertAngleTotal = 0.0f;
 }
 
 
 - (void) dealloc
 {
-    pWindow->removeViewport(0);
+    // Destroy our entities
+    [Context context].scene->destroy(pCameraController);
 
-    delete pScene;
+    // Destroy our viewport and render window
+    pWindow->removeViewport(0);
+    Ogre::Root::getSingletonPtr()->detachRenderTarget("3D view");
 
     [super dealloc];
 }
@@ -180,6 +174,7 @@ using namespace Athena::Math;
     // Declarations
     AxisAlignedBox boundingBox;
     float boundingRadius = 0.0f;
+    Scene* pScene = [Context context].scene;
 
     // Compute the bounding box and radius of the whole scene
     Scene::tEntitiesIterator iter = pScene->getEntitiesIterator();
@@ -209,6 +204,179 @@ using namespace Athena::Math;
     pCameraAxis->setPosition(0.0f, 0.0f, std::max(boundingRadius / MathUtils::Tan(angle),
                                                   boundingRadius + pCamera->getNearClipDistance()));
     pCameraAxis->setDirection(Vector3::NEGATIVE_UNIT_Z);
+    
+    vertAngleTotal = 0.0f;
+}
+
+
+/**************************** IMPLEMENTATION OF NSResponder *****************************/
+
+- (BOOL) acceptsFirstResponder
+{
+    return YES;
+}
+
+
+- (void) keyDown:(NSEvent*)theEvent
+{
+    if (!bManipulatingCamera)
+    {
+        NSString* key = [theEvent charactersIgnoringModifiers];
+    
+        if ([key compare:@"s"] == NSOrderedSame)
+            bManipulatingCamera = YES;
+    }
+}
+
+
+- (void) keyUp:(NSEvent*)theEvent
+{
+    NSString* key = [theEvent charactersIgnoringModifiers];
+    
+    if ([key compare:@"s"] == NSOrderedSame)
+    {
+        if (bManipulatingCamera)
+            bManipulatingCamera = NO;
+    }
+}
+
+
+- (void) mouseDown:(NSEvent*)theEvent
+{
+    if (bManipulatingCamera && !(bMovingCamera || bRotatingCamera || bZoomingCamera))
+    {
+        bMovingCamera = YES;
+        previousMouseLocation = [NSEvent mouseLocation];
+    }
+}
+
+
+- (void) mouseUp:(NSEvent*)theEvent
+{
+    if (bManipulatingCamera)
+        bMovingCamera = NO;
+}
+
+
+- (void) mouseDragged:(NSEvent*)theEvent
+{
+    if (bManipulatingCamera && bMovingCamera)
+    {
+        int width = pWindow->getWidth();
+        int height = pWindow->getHeight();
+
+        NSPoint pos = [NSEvent mouseLocation];
+        
+        float x = ((float) (previousMouseLocation.x - pos.x) / width);
+        float y = ((float) (previousMouseLocation.y - pos.y) / height);
+
+		float FOVy = pCamera->getFOVy().valueRadians();
+		float FOVx = FOVy * pCamera->getAspectRatio();
+
+        float z = pCameraAxis->getPosition().z;
+
+        float dx = x * 2.0f * z * (float) MathUtils::Tan(FOVx * 0.5f);
+		float dy = y * 2.0f * z * (float) MathUtils::Tan(FOVy * 0.5f);
+
+        [self translateBy:Vector3(dx, dy, 0.0f)];
+        
+        previousMouseLocation = pos;
+    }
+}
+
+
+- (void) rightMouseDown:(NSEvent*)theEvent
+{
+    if (bManipulatingCamera && !(bMovingCamera || bRotatingCamera || bZoomingCamera))
+    {
+        bRotatingCamera = YES;
+        previousMouseLocation = [NSEvent mouseLocation];
+    }
+}
+
+
+- (void) rightMouseUp:(NSEvent*)theEvent
+{
+    if (bManipulatingCamera)
+        bRotatingCamera = NO;
+}
+
+
+- (void) rightMouseDragged:(NSEvent*)theEvent
+{
+    if (bManipulatingCamera && bRotatingCamera)
+    {
+        int width = pWindow->getWidth();
+        int height = pWindow->getHeight();
+
+        NSPoint pos = [NSEvent mouseLocation];
+        
+        float x = ((float) (previousMouseLocation.x - pos.x) / width);
+        float y = ((float) (previousMouseLocation.y - pos.y) / height);
+
+		// Compute the vertical rotation (stuck between -PI/2 and PI/2)
+		float vertAngle = -2.0f * y;
+		if (vertAngleTotal + vertAngle < -MathUtils::HALF_PI)
+			vertAngle = -MathUtils::HALF_PI - vertAngleTotal;
+		else if (vertAngleTotal + vertAngle > MathUtils::HALF_PI)
+			vertAngle = MathUtils::HALF_PI - vertAngleTotal;
+		vertAngleTotal += vertAngle;
+
+		// Perform the rotations
+        [self rotateBy:Degree(Radian(2.0f * x)) around:Vector3::UNIT_Y];
+        [self rotateBy:Degree(Radian(vertAngle)) around:Vector3::UNIT_X];
+
+        previousMouseLocation = pos;
+    }
+}
+
+
+- (void) otherMouseDown:(NSEvent*)theEvent
+{
+    if (bManipulatingCamera && !(bMovingCamera || bRotatingCamera || bZoomingCamera))
+    {
+        bZoomingCamera = YES;
+        previousMouseLocation = [NSEvent mouseLocation];
+    }
+}
+
+
+- (void) otherMouseUp:(NSEvent*)theEvent
+{
+    if (bManipulatingCamera)
+        bZoomingCamera = NO;
+}
+
+
+- (void) otherMouseDragged:(NSEvent*)theEvent
+{
+    if (bManipulatingCamera && bZoomingCamera)
+    {
+        int width = pWindow->getWidth();
+        int height = pWindow->getHeight();
+
+        NSPoint pos = [NSEvent mouseLocation];
+        
+        float x = ((float) (previousMouseLocation.x - pos.x) / width);
+        float y = ((float) (previousMouseLocation.y - pos.y) / height);
+
+		float FOVy = pCamera->getFOVy().valueRadians();
+		float FOVx = FOVy * pCamera->getAspectRatio();
+
+        float z = pCameraAxis->getPosition().z;
+
+        float dx = x * 2.0f * z * (float) MathUtils::Tan(FOVx * 0.5f);
+		float dy = y * 2.0f * z * (float) MathUtils::Tan(FOVy * 0.5f);
+
+		float delta = dx + dy;
+
+		if (z - delta < 0.0f)
+			delta = z - 0.01f;
+
+        [self translateBy:Vector3(0.0f, 0.0f, -delta)];
+        
+        previousMouseLocation = pos;
+    }
 }
 
 @end

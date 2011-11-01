@@ -1,15 +1,10 @@
-#include <MeshViewerState.h>
-#include <Athena/Engine.h>
-#include <Athena/Tasks/TaskManager.h>
-#include <Athena/GameStates/GameStateManager.h>
-#include <Athena-Entities/Scene.h>
-#include <Athena-Entities/Entity.h>
-#include <Athena-Entities/Transforms.h>
-#include <Athena-Graphics/Visual/Object.h>
-#include <Ogre/OgreRoot.h>
-#include <Ogre/OgreRenderWindow.h>
-#include <Ogre/OgreSceneManager.h>
-#include <Ogre/OgreResourceGroupManager.h>
+#import <MeshViewerState.h>
+#import <Context.h>
+#import <Athena-Entities/Scene.h>
+#import <Athena-Entities/Entity.h>
+#import <Athena-Entities/Transforms.h>
+#import <Athena-Graphics/Visual/Object.h>
+#import <Ogre/OgreResourceGroupManager.h>
 
 
 using namespace Athena;
@@ -25,7 +20,7 @@ static const char* __CONTEXT__ = "Mesh Viewer State";
 /***************************** CONSTRUCTION / DESTRUCTION ******************************/
 
 MeshViewerState::MeshViewerState()
-: m_view(nil), m_pEntity(0)
+: m_pEntity(0)
 {
 }
 
@@ -39,9 +34,11 @@ MeshViewerState::~MeshViewerState()
 
 bool MeshViewerState::loadMesh(const std::string& strFileName)
 {
+    Scene* pScene = [Context context].scene;
+
     if (m_pEntity)
     {
-        m_view.scene->destroy(m_pEntity);
+        pScene->destroy(m_pEntity);
         m_pEntity = 0;
     }
 
@@ -57,11 +54,10 @@ bool MeshViewerState::loadMesh(const std::string& strFileName)
     pManager->initialiseResourceGroup("Content");
 
 
-    m_pEntity = m_view.scene->create("Mesh");
+    m_pEntity = pScene->create("Mesh");
 
     Visual::Object* pObject = new Visual::Object("Mesh", m_pEntity->getComponentsList());
-    if (pObject->loadMesh(strFileName.substr(offset + 1)))
-        [m_view frameAll];
+    return pObject->loadMesh(strFileName.substr(offset + 1));
 }
 
 
@@ -70,16 +66,22 @@ bool MeshViewerState::loadMesh(const std::string& strFileName)
 
 void MeshViewerState::enter()
 {
-    m_view = [[View3D alloc] initWithRenderWindow:Engine::getSingletonPtr()->getMainWindow()];
 }
 
 
 void MeshViewerState::exit()
 {
-    [m_view release];
+    if (m_pEntity)
+    {
+        Scene* pScene = [Context context].scene;
+        pScene->destroy(m_pEntity);
+        m_pEntity = 0;
+    }
 
-    m_view    = nil;
-    m_pEntity = 0;
+    Ogre::ResourceGroupManager* pManager = Ogre::ResourceGroupManager::getSingletonPtr();
+
+    if (pManager->resourceGroupExists("Content"))
+        pManager->destroyResourceGroup("Content");
 }
 
 
@@ -95,5 +97,4 @@ void MeshViewerState::resume()
 
 void MeshViewerState::process()
 {
-    [m_view rotateBy:Degree(1.0f) around:Vector3::UNIT_Y];
 }

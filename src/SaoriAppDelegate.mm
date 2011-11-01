@@ -12,17 +12,27 @@ using Ogre::WindowEventUtilities;
 @implementation SaoriAppDelegate
 
 @synthesize window;
-@synthesize ogreView;
+@synthesize mainOgreView;
+@synthesize view3D;
 
 
 - (void) applicationDidFinishLaunching:(NSNotification*)aNotification
 {
-    // Initialize Athena, using the custom view
+    // Initialize Athena
     engine.setup("athena.cfg");
-    
-    NSRect frame = [ogreView frame];
-    engine.createRenderWindow((size_t) ogreView, "3D view", frame.size.width,
-                              frame.size.height, false);
+
+    // Create the main Ogre view (hidden, to initialize OpenGL)
+    NSRect frame = [mainOgreView frame];
+    Engine::getSingletonPtr()->createRenderWindow((size_t) mainOgreView, "MainOgreView",
+                                                  (int) frame.size.width,
+                                                  (int) frame.size.height,
+                                                  false);
+
+    // Create the scene
+    [[Context context] createScene:@"MainScene"];
+
+    // Setup our views
+    [view3D setup];
 
     // Create our gamestate
     GameStateManager* pGameStateManager = engine.getGameStateManager();
@@ -32,8 +42,12 @@ using Ogre::WindowEventUtilities;
     pGameStateManager->registerState(1, pMeshViewerState);
     pGameStateManager->pushState(1);
 
+    [window makeFirstResponder:view3D];
+
 	// Create a timer to render at 50fps
-	[NSTimer scheduledTimerWithTimeInterval:0.02 target:self selector:@selector(stepOneFrame) userInfo:NULL repeats:YES];
+	[NSTimer scheduledTimerWithTimeInterval:0.02 target:self
+	                               selector:@selector(stepOneFrame)
+	                               userInfo:NULL repeats:YES];
 }
 
 
@@ -57,7 +71,8 @@ using Ogre::WindowEventUtilities;
     if ([op runModal] == NSOKButton)
     {
         NSString* filename = [op filename];
-        pMeshViewerState->loadMesh([filename UTF8String]);
+        if (pMeshViewerState->loadMesh([filename UTF8String]))
+            [view3D frameAll];
     }
 }
 
