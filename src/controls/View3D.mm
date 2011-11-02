@@ -226,6 +226,21 @@ using namespace Athena::Math;
 }
 
 
+- (void) changeCursor:(NSString*)name
+{
+    NSString* path = [[[NSBundle mainBundle] bundlePath] stringByAppendingFormat:@"/Contents/Resources/Cursors/%@.png",name];
+    NSImage* image = [[NSImage alloc] initWithContentsOfFile:path];
+
+    NSPoint hotSpot;
+    hotSpot.x = image.size.width / 2;
+    hotSpot.y = image.size.height / 2;
+
+    NSCursor* cursor = [[NSCursor alloc] initWithImage:image hotSpot:hotSpot];
+
+    [cursor push];
+}
+
+
 /**************************** IMPLEMENTATION OF NSResponder *****************************/
 
 - (BOOL) acceptsFirstResponder
@@ -243,7 +258,14 @@ using namespace Athena::Math;
         if ([key compare:@"s"] == NSOrderedSame)
         {
             bManipulatingCamera = YES;
+            bMovingCamera = NO;
+            bRotatingCamera = NO;
+            bZoomingCamera = NO;
+
             [[Context context] pushStatusText:@"{{\\b LMB:} Translate camera{\\tab}{\\b MMB:} Zoom{\\tab}{\\b RMB:} Orbit camera}"];
+
+            NSCursor* cursor = [NSCursor openHandCursor];
+            [cursor push];
         }
     }
 }
@@ -257,8 +279,17 @@ using namespace Athena::Math;
     {
         if (bManipulatingCamera)
         {
+            if (bMovingCamera || bRotatingCamera || bZoomingCamera)
+                [NSCursor pop];
+
             bManipulatingCamera = NO;
+            bMovingCamera = NO;
+            bRotatingCamera = NO;
+            bZoomingCamera = NO;
+
             [[Context context] popStatusText];
+
+            [NSCursor pop];
         }
     }
 }
@@ -270,6 +301,8 @@ using namespace Athena::Math;
     {
         bMovingCamera = YES;
         previousMouseLocation = [NSEvent mouseLocation];
+        
+        [self changeCursor:@"TranslateCamera"];
     }
 }
 
@@ -277,7 +310,10 @@ using namespace Athena::Math;
 - (void) mouseUp:(NSEvent*)theEvent
 {
     if (bManipulatingCamera)
+    {
         bMovingCamera = NO;
+        [NSCursor pop];
+    }
 }
 
 
@@ -314,6 +350,8 @@ using namespace Athena::Math;
     {
         bRotatingCamera = YES;
         previousMouseLocation = [NSEvent mouseLocation];
+        
+        [self changeCursor:@"RotateCamera"];
     }
 }
 
@@ -321,7 +359,10 @@ using namespace Athena::Math;
 - (void) rightMouseUp:(NSEvent*)theEvent
 {
     if (bManipulatingCamera)
+    {
         bRotatingCamera = NO;
+        [NSCursor pop];
+    }
 }
 
 
@@ -360,6 +401,8 @@ using namespace Athena::Math;
     {
         bZoomingCamera = YES;
         previousMouseLocation = [NSEvent mouseLocation];
+        
+        [self changeCursor:@"ZoomCamera"];
     }
 }
 
@@ -367,7 +410,10 @@ using namespace Athena::Math;
 - (void) otherMouseUp:(NSEvent*)theEvent
 {
     if (bManipulatingCamera)
+    {
         bZoomingCamera = NO;
+        [NSCursor pop];
+    }
 }
 
 

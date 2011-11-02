@@ -66,7 +66,13 @@ add_custom_command(TARGET saori POST_BUILD
   COMMAND ln ARGS -s -f ${SAORI_BINARY_DIR}/bin/plugins.cfg ${CONTENTS_PATH}/Resources/
   COMMAND ln ARGS -s -f ${SAORI_BINARY_DIR}/bin/resources.cfg ${CONTENTS_PATH}/Resources/
   COMMAND ln ARGS -s -f ${SAORI_BINARY_DIR}/bin/athena.cfg ${CONTENTS_PATH}/Resources/
-  )
+)
+
+# Symlink the cursors & icons
+add_custom_command(TARGET saori POST_BUILD
+  COMMAND mkdir ARGS -p ${CONTENTS_PATH}/Resources
+  COMMAND ln ARGS -s -F -h ${SAORI_SOURCE_DIR}/resources/Cursors/ ${CONTENTS_PATH}/Resources/Cursors
+)
 
 # Symlink the plugins
 add_custom_command(TARGET saori POST_BUILD
