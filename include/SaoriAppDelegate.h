@@ -8,9 +8,10 @@
 {
 @private
     // UI
-    NSWindow* window;
-    OgreView* mainOgreView;
-	View3D*   view3D;
+    NSWindow*    window;
+    OgreView*    mainOgreView;
+	View3D*      view3D;
+    NSTextView*  statusBar;
 
     // Attributes
     Athena::Engine   engine;
@@ -18,9 +19,10 @@
 }
 
 // Outlets
-@property (assign) IBOutlet NSWindow* window;
-@property (assign) IBOutlet OgreView* mainOgreView;
-@property (assign) IBOutlet View3D*   view3D;
+@property (assign) IBOutlet NSWindow*    window;
+@property (assign) IBOutlet OgreView*    mainOgreView;
+@property (assign) IBOutlet View3D*      view3D;
+@property (assign) NSTextView*           statusBar;
 
 // Actions
 - (IBAction) openFile:(id)sender;

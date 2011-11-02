@@ -12,10 +12,18 @@ using namespace Athena::Math;
 Context* gContext = [[Context alloc] init];
 
 
+@interface Context (hidden)
+
+- (void) updateStatusText;
+
+@end
+
+
 @implementation Context
 
 /************************************** PROPERTIES **************************************/
 
+@synthesize statusBar;
 @synthesize scene;
 
 
@@ -25,7 +33,12 @@ Context* gContext = [[Context alloc] init];
 {
     [super init];
     
+    statusBar = nil;
     scene = 0;
+
+    statusTexts = [[NSMutableArray alloc] initWithCapacity:10];
+    
+    return self;
 }
 
 
@@ -62,6 +75,37 @@ Context* gContext = [[Context alloc] init];
         delete scene;
     
     scene = 0;
+}
+
+
+- (void) pushStatusText:(NSString*)text
+{
+    [statusTexts addObject:text];
+    [self updateStatusText];
+}
+
+
+- (void) popStatusText
+{
+    [statusTexts removeLastObject];
+    [self updateStatusText];
+}
+
+
+- (void) updateStatusText
+{
+    if ([statusTexts count] > 0)
+    {
+        NSString* text = [statusTexts lastObject];
+        NSAttributedString* rtf = [[NSAttributedString alloc] initWithRTF:[text dataUsingEncoding: [NSString defaultCStringEncoding]]
+                                                       documentAttributes:nil];
+        [[statusBar textStorage] setAttributedString:rtf];
+        [rtf release];
+    }
+    else
+    {
+        [statusBar setString:@""];
+    }
 }
 
 @end

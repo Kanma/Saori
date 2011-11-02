@@ -130,6 +130,8 @@ using namespace Athena::Math;
                                              selector:@selector(viewSizeChanged:)
                                                  name:NSViewFrameDidChangeNotification
                                                object:self];
+
+    [[Context context] pushStatusText:@"{{\\b S:} Camera functions}"];
 }
 
 
@@ -239,7 +241,10 @@ using namespace Athena::Math;
         NSString* key = [theEvent charactersIgnoringModifiers];
     
         if ([key compare:@"s"] == NSOrderedSame)
+        {
             bManipulatingCamera = YES;
+            [[Context context] pushStatusText:@"{{\\b LMB:} Translate camera{\\tab}{\\b MMB:} Zoom{\\tab}{\\b RMB:} Orbit camera}"];
+        }
     }
 }
 
@@ -251,7 +256,10 @@ using namespace Athena::Math;
     if ([key compare:@"s"] == NSOrderedSame)
     {
         if (bManipulatingCamera)
+        {
             bManipulatingCamera = NO;
+            [[Context context] popStatusText];
+        }
     }
 }
 

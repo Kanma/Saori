@@ -14,10 +14,25 @@ using Ogre::WindowEventUtilities;
 @synthesize window;
 @synthesize mainOgreView;
 @synthesize view3D;
+@synthesize statusBar;
 
 
 - (void) applicationDidFinishLaunching:(NSNotification*)aNotification
 {
+    // Create the text view of the status bar
+    NSRect statusBarFrame = [window frame];
+    statusBarFrame.origin.x = 0;
+    statusBarFrame.origin.y = 0;
+    statusBarFrame.size.height = 18;
+    statusBar = [[NSTextView alloc] initWithFrame:statusBarFrame];
+    [statusBar setDrawsBackground:NO];
+    [statusBar setEditable:NO];
+    [statusBar setRichText:YES];
+    [statusBar setSelectable:NO];
+    [window.contentView addSubview:statusBar];
+
+    [Context context].statusBar = statusBar;
+
     // Initialize Athena
     engine.setup("athena.cfg");
 
