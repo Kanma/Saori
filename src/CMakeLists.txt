@@ -72,6 +72,10 @@ add_custom_command(TARGET saori POST_BUILD
 add_custom_command(TARGET saori POST_BUILD
   COMMAND mkdir ARGS -p ${CONTENTS_PATH}/Resources
   COMMAND ln ARGS -s -F -h ${SAORI_SOURCE_DIR}/resources/Cursors/ ${CONTENTS_PATH}/Resources/Cursors
+  COMMAND ln ARGS -s -f ${SAORI_SOURCE_DIR}/resources/Icons/Icon_Solid.png ${CONTENTS_PATH}/Resources/
+  COMMAND ln ARGS -s -f ${SAORI_SOURCE_DIR}/resources/Icons/Icon_Wireframe.png ${CONTENTS_PATH}/Resources/
+  COMMAND ln ARGS -s -f ${SAORI_SOURCE_DIR}/resources/Icons/Icon_Points.png ${CONTENTS_PATH}/Resources/
+  COMMAND ln ARGS -s -f ${SAORI_SOURCE_DIR}/resources/Icons/Icon_Light.png ${CONTENTS_PATH}/Resources/
 )
 
 # Symlink the plugins

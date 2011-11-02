@@ -14,6 +14,7 @@ using Ogre::WindowEventUtilities;
 @synthesize window;
 @synthesize mainOgreView;
 @synthesize view3D;
+@synthesize btnPolygonMode;
 @synthesize statusBar;
 
 
@@ -89,6 +90,34 @@ using Ogre::WindowEventUtilities;
         if (pMeshViewerState->loadMesh([filename UTF8String]))
             [view3D frameAll];
     }
+}
+
+
+- (IBAction) changePolygonMode:(id)sender
+{
+    switch ([sender selectedSegment])
+    {
+        case 0: view3D.polygonMode = Ogre::PM_SOLID; break;
+        case 1: view3D.polygonMode = Ogre::PM_WIREFRAME; break;
+        case 2: view3D.polygonMode = Ogre::PM_POINTS; break;
+    }
+}
+
+
+- (IBAction) toggleCameraLight:(id)sender
+{
+    view3D.lightEnabled = ([sender state] == NSOnState);
+}
+
+
+- (IBAction) changeCameraLightColor:(id)sender
+{
+    Math::Color color;
+
+    NSColor* rgbColor = [[sender color] colorUsingColorSpaceName:NSCalibratedRGBColorSpace];
+    [rgbColor getRed:&color.r green:&color.g blue:&color.b alpha:&color.a];
+
+    view3D.lightColor = color;
 }
 
 @end

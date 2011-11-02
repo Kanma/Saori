@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		D4B58B9A14601D6E007CFF84 /* View3D.mm in Sources */ = {isa = PBXBuildFile; fileRef = D4B58B9914601D6E007CFF84 /* View3D.mm */; };
+		D4D12FA01461E8EA00912EA8 /* Icon_Solid.png in Resources */ = {isa = PBXBuildFile; fileRef = D4D12F9F1461E8EA00912EA8 /* Icon_Solid.png */; };
+		D4D12FA31461E9BB00912EA8 /* Icon_Points.png in Resources */ = {isa = PBXBuildFile; fileRef = D4D12FA11461E9BB00912EA8 /* Icon_Points.png */; };
+		D4D12FA41461E9BB00912EA8 /* Icon_Wireframe.png in Resources */ = {isa = PBXBuildFile; fileRef = D4D12FA21461E9BB00912EA8 /* Icon_Wireframe.png */; };
+		D4DD8C4B1461F7AA00AD1162 /* Icon_Light.png in Resources */ = {isa = PBXBuildFile; fileRef = D4DD8C4A1461F7AA00AD1162 /* Icon_Light.png */; };
 		ED9AF5DD1457E450004259CB /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED9AF5DC1457E450004259CB /* Cocoa.framework */; };
 		ED9AF5FB1457E471004259CB /* Application.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED9AF5F91457E471004259CB /* Application.xib */; };
 		ED9AF5FC1457E471004259CB /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = ED9AF5FA1457E471004259CB /* Info.plist */; };
@@ -18,6 +22,10 @@
 /* Begin PBXFileReference section */
 		D4B58B9714601D4C007CFF84 /* View3D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = View3D.h; path = ../include/controls/View3D.h; sourceTree = SOURCE_ROOT; };
 		D4B58B9914601D6E007CFF84 /* View3D.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = View3D.mm; path = ../src/controls/View3D.mm; sourceTree = SOURCE_ROOT; };
+		D4D12F9F1461E8EA00912EA8 /* Icon_Solid.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon_Solid.png; sourceTree = "<group>"; };
+		D4D12FA11461E9BB00912EA8 /* Icon_Points.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon_Points.png; sourceTree = "<group>"; };
+		D4D12FA21461E9BB00912EA8 /* Icon_Wireframe.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon_Wireframe.png; sourceTree = "<group>"; };
+		D4DD8C4A1461F7AA00AD1162 /* Icon_Light.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon_Light.png; sourceTree = "<group>"; };
 		ED9AF5D81457E450004259CB /* Saori.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Saori.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED9AF5DC1457E450004259CB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		ED9AF5DF1457E450004259CB /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -42,9 +50,29 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D4D12F9D1461E85D00912EA8 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				D4D12FA51461EBB100912EA8 /* Icons */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		D4D12FA51461EBB100912EA8 /* Icons */ = {
+			isa = PBXGroup;
+			children = (
+				D4DD8C4A1461F7AA00AD1162 /* Icon_Light.png */,
+				D4D12FA11461E9BB00912EA8 /* Icon_Points.png */,
+				D4D12FA21461E9BB00912EA8 /* Icon_Wireframe.png */,
+				D4D12F9F1461E8EA00912EA8 /* Icon_Solid.png */,
+			);
+			path = Icons;
+			sourceTree = "<group>";
+		};
 		ED9AF5CD1457E450004259CB = {
 			isa = PBXGroup;
 			children = (
+				D4D12F9D1461E85D00912EA8 /* Resources */,
 				ED9AF5E21457E450004259CB /* Saori */,
 				ED9AF5DB1457E450004259CB /* Frameworks */,
 				ED9AF5D91457E450004259CB /* Products */,
@@ -144,6 +172,10 @@
 			files = (
 				ED9AF5FB1457E471004259CB /* Application.xib in Resources */,
 				ED9AF5FC1457E471004259CB /* Info.plist in Resources */,
+				D4D12FA01461E8EA00912EA8 /* Icon_Solid.png in Resources */,
+				D4D12FA31461E9BB00912EA8 /* Icon_Points.png in Resources */,
+				D4D12FA41461E9BB00912EA8 /* Icon_Wireframe.png in Resources */,
+				D4DD8C4B1461F7AA00AD1162 /* Icon_Light.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

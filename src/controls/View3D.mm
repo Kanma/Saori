@@ -111,7 +111,7 @@ using namespace Athena::Math;
 
     pCameraLight = new PointLight("Light", pCameraController->getComponentsList());
     pCameraLight->setTransforms(pCameraAxis);
-    pCameraLight->setDiffuseColor(Color(0.7f, 0.7f, 0.7f, 0.7f));
+    pCameraLight->setDiffuseColor(Color(0.7f, 0.7f, 0.7f));
 
     pCamera->setAspectRatio(float(window->getWidth()) / window->getHeight());
 
