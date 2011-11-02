@@ -123,6 +123,13 @@ using namespace Athena::Math;
     bRotatingCamera = NO;
     bZoomingCamera = NO;
     vertAngleTotal = 0.0f;
+    
+    [self setPostsFrameChangedNotifications:YES];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(viewSizeChanged:)
+                                                 name:NSViewFrameDidChangeNotification
+                                               object:self];
 }
 
 
@@ -136,6 +143,14 @@ using namespace Athena::Math;
     Ogre::Root::getSingletonPtr()->detachRenderTarget("3D view");
 
     [super dealloc];
+}
+
+
+- (void) viewSizeChanged:(NSNotification*)notification
+{
+    pWindow->windowMovedOrResized();
+
+    pCamera->setAspectRatio(float(window->getWidth()) / window->getHeight());
 }
 
 
