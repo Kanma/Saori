@@ -18,6 +18,9 @@ using namespace Athena::Math;
 
 /************************************** PROPERTIES **************************************/
 
+@synthesize ogreView;
+
+
 - (void) setAspectRatio:(Real)value
 {
     assert(pCamera);
@@ -82,23 +85,70 @@ using namespace Athena::Math;
 }
 
 
+- (void) setBackgroundColor:(Athena::Math::Color)color
+{
+    assert(pViewport);
+
+    pViewport->setBackgroundColour(toOgre(color));
+}
+
+
+- (Athena::Math::Color) backgroundColor
+{
+    assert(pViewport);
+
+    return fromOgre(pViewport->getBackgroundColour());
+}
+
+
+/*************************************** ACTIONS ****************************************/
+
+- (IBAction) changePolygonMode:(id)sender
+{
+    switch ([sender selectedSegment])
+    {
+        case 0: self.polygonMode = Ogre::PM_SOLID; break;
+        case 1: self.polygonMode = Ogre::PM_WIREFRAME; break;
+        case 2: self.polygonMode = Ogre::PM_POINTS; break;
+    }
+}
+
+
+- (IBAction) toggleCameraLight:(id)sender
+{
+    self.lightEnabled = ([sender state] == NSOnState);
+}
+
+
+- (IBAction) changeCameraLightColor:(id)sender
+{
+    Math::Color color;
+
+    NSColor* rgbColor = [[sender color] colorUsingColorSpaceName:NSCalibratedRGBColorSpace];
+    [rgbColor getRed:&color.r green:&color.g blue:&color.b alpha:&color.a];
+
+    self.lightColor = color;
+}
+
+
 /*************************************** METHODS ****************************************/
 
-- (void) setup
+- (void) setup:(NSString*)viewName
 {
-    NSRect frame = [self frame];
+    NSRect frame = [ogreView frame];
     
     pWindow = Engine::getSingletonPtr()->createRenderWindow(
-                                                    (size_t) self, "3D view",
-                                                    (int) frame.size.width,
-                                                    (int) frame.size.height,
-                                                    false);
+                                                (size_t) ogreView,
+                                                [[viewName stringByAppendingString:@"/RenderWindow"] UTF8String],
+                                                (int) frame.size.width,
+                                                (int) frame.size.height,
+                                                false);
     
     // Retrieve the scene
     Scene* pScene = [Context context].scene;
 
     // Create the camera and the viewport
-    pCameraController = pScene->create("CameraController");
+    pCameraController = pScene->create([[viewName stringByAppendingString:@"/CameraController"] UTF8String]);
 
     pCameraAxis = new Transforms("CameraTransforms", pCameraController->getComponentsList());
     pCameraAxis->translate(0.0f, 0.0f, 10.0f);
@@ -113,17 +163,11 @@ using namespace Athena::Math;
     pCameraLight->setTransforms(pCameraAxis);
     pCameraLight->setDiffuseColor(Color(0.7f, 0.7f, 0.7f));
 
-    pCamera->setAspectRatio(float(window->getWidth()) / window->getHeight());
+    pCamera->setAspectRatio(frame.size.width / frame.size.height);
 
-    pViewport = pCamera->createViewport(window);
+    pViewport = pCamera->createViewport(pWindow);
     pViewport->setBackgroundColour(Ogre::ColourValue(0.1f, 0.1f, 0.1f));
-    
-    bManipulatingCamera = NO;
-    bMovingCamera = NO;
-    bRotatingCamera = NO;
-    bZoomingCamera = NO;
-    vertAngleTotal = 0.0f;
-    
+        
     [self setPostsFrameChangedNotifications:YES];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -132,6 +176,8 @@ using namespace Athena::Math;
                                                object:self];
 
     [[Context context] pushStatusText:@"{{\\b S:} Camera functions}"];
+
+    [ogreView setupwithCamera:pCamera andAxis:pCameraAxis];
 }
 
 
@@ -142,7 +188,7 @@ using namespace Athena::Math;
 
     // Destroy our viewport and render window
     pWindow->removeViewport(0);
-    Ogre::Root::getSingletonPtr()->detachRenderTarget("3D view");
+    Ogre::Root::getSingletonPtr()->detachRenderTarget(pWindow->getName());
 
     [super dealloc];
 }
@@ -152,11 +198,11 @@ using namespace Athena::Math;
 {
     pWindow->windowMovedOrResized();
 
-    pCamera->setAspectRatio(float(window->getWidth()) / window->getHeight());
+    pCamera->setAspectRatio(float(pWindow->getWidth()) / pWindow->getHeight());
 }
 
 
-- (void) translateBy:(const Athena::Math::Vector3&)offset
+- (void) translateCameraBy:(const Athena::Math::Vector3&)offset
 {
     assert(pCameraAxis);
     assert(pCameraController);
@@ -166,7 +212,7 @@ using namespace Athena::Math;
 }
 
 
-- (void) rotateBy:(const Athena::Math::Quaternion&)quat
+- (void) rotateCameraBy:(const Athena::Math::Quaternion&)quat
 {
     assert(pCameraController);
     
@@ -174,7 +220,7 @@ using namespace Athena::Math;
 }
 
 
-- (void) rotateBy:(const Athena::Math::Degree&)angle around:(const Athena::Math::Vector3&)axis
+- (void) rotateCameraBy:(const Athena::Math::Degree&)angle around:(const Athena::Math::Vector3&)axis
 {
     assert(pCameraAxis);
     assert(pCameraController);
@@ -222,7 +268,7 @@ using namespace Athena::Math;
                                                   boundingRadius + pCamera->getNearClipDistance()));
     pCameraAxis->setDirection(Vector3::NEGATIVE_UNIT_Z);
     
-    vertAngleTotal = 0.0f;
+    // vertAngleTotal = 0.0f;
 }
 
 
@@ -238,214 +284,6 @@ using namespace Athena::Math;
     NSCursor* cursor = [[NSCursor alloc] initWithImage:image hotSpot:hotSpot];
 
     [cursor push];
-}
-
-
-/**************************** IMPLEMENTATION OF NSResponder *****************************/
-
-- (BOOL) acceptsFirstResponder
-{
-    return YES;
-}
-
-
-- (void) keyDown:(NSEvent*)theEvent
-{
-    if (!bManipulatingCamera)
-    {
-        NSString* key = [theEvent charactersIgnoringModifiers];
-    
-        if ([key compare:@"s"] == NSOrderedSame)
-        {
-            bManipulatingCamera = YES;
-            bMovingCamera = NO;
-            bRotatingCamera = NO;
-            bZoomingCamera = NO;
-
-            [[Context context] pushStatusText:@"{{\\b LMB:} Translate camera{\\tab}{\\b MMB:} Zoom{\\tab}{\\b RMB:} Orbit camera}"];
-
-            NSCursor* cursor = [NSCursor openHandCursor];
-            [cursor push];
-        }
-    }
-}
-
-
-- (void) keyUp:(NSEvent*)theEvent
-{
-    NSString* key = [theEvent charactersIgnoringModifiers];
-    
-    if ([key compare:@"s"] == NSOrderedSame)
-    {
-        if (bManipulatingCamera)
-        {
-            if (bMovingCamera || bRotatingCamera || bZoomingCamera)
-                [NSCursor pop];
-
-            bManipulatingCamera = NO;
-            bMovingCamera = NO;
-            bRotatingCamera = NO;
-            bZoomingCamera = NO;
-
-            [[Context context] popStatusText];
-
-            [NSCursor pop];
-        }
-    }
-}
-
-
-- (void) mouseDown:(NSEvent*)theEvent
-{
-    if (bManipulatingCamera && !(bMovingCamera || bRotatingCamera || bZoomingCamera))
-    {
-        bMovingCamera = YES;
-        previousMouseLocation = [NSEvent mouseLocation];
-        
-        [self changeCursor:@"TranslateCamera"];
-    }
-}
-
-
-- (void) mouseUp:(NSEvent*)theEvent
-{
-    if (bManipulatingCamera)
-    {
-        bMovingCamera = NO;
-        [NSCursor pop];
-    }
-}
-
-
-- (void) mouseDragged:(NSEvent*)theEvent
-{
-    if (bManipulatingCamera && bMovingCamera)
-    {
-        int width = pWindow->getWidth();
-        int height = pWindow->getHeight();
-
-        NSPoint pos = [NSEvent mouseLocation];
-        
-        float x = ((float) (previousMouseLocation.x - pos.x) / width);
-        float y = ((float) (previousMouseLocation.y - pos.y) / height);
-
-		float FOVy = pCamera->getFOVy().valueRadians();
-		float FOVx = FOVy * pCamera->getAspectRatio();
-
-        float z = pCameraAxis->getPosition().z;
-
-        float dx = x * 2.0f * z * (float) MathUtils::Tan(FOVx * 0.5f);
-		float dy = y * 2.0f * z * (float) MathUtils::Tan(FOVy * 0.5f);
-
-        [self translateBy:Vector3(dx, dy, 0.0f)];
-        
-        previousMouseLocation = pos;
-    }
-}
-
-
-- (void) rightMouseDown:(NSEvent*)theEvent
-{
-    if (bManipulatingCamera && !(bMovingCamera || bRotatingCamera || bZoomingCamera))
-    {
-        bRotatingCamera = YES;
-        previousMouseLocation = [NSEvent mouseLocation];
-        
-        [self changeCursor:@"RotateCamera"];
-    }
-}
-
-
-- (void) rightMouseUp:(NSEvent*)theEvent
-{
-    if (bManipulatingCamera)
-    {
-        bRotatingCamera = NO;
-        [NSCursor pop];
-    }
-}
-
-
-- (void) rightMouseDragged:(NSEvent*)theEvent
-{
-    if (bManipulatingCamera && bRotatingCamera)
-    {
-        int width = pWindow->getWidth();
-        int height = pWindow->getHeight();
-
-        NSPoint pos = [NSEvent mouseLocation];
-        
-        float x = ((float) (previousMouseLocation.x - pos.x) / width);
-        float y = ((float) (previousMouseLocation.y - pos.y) / height);
-
-		// Compute the vertical rotation (stuck between -PI/2 and PI/2)
-		float vertAngle = -2.0f * y;
-		if (vertAngleTotal + vertAngle < -MathUtils::HALF_PI)
-			vertAngle = -MathUtils::HALF_PI - vertAngleTotal;
-		else if (vertAngleTotal + vertAngle > MathUtils::HALF_PI)
-			vertAngle = MathUtils::HALF_PI - vertAngleTotal;
-		vertAngleTotal += vertAngle;
-
-		// Perform the rotations
-        [self rotateBy:Degree(Radian(2.0f * x)) around:Vector3::UNIT_Y];
-        [self rotateBy:Degree(Radian(vertAngle)) around:Vector3::UNIT_X];
-
-        previousMouseLocation = pos;
-    }
-}
-
-
-- (void) otherMouseDown:(NSEvent*)theEvent
-{
-    if (bManipulatingCamera && !(bMovingCamera || bRotatingCamera || bZoomingCamera))
-    {
-        bZoomingCamera = YES;
-        previousMouseLocation = [NSEvent mouseLocation];
-        
-        [self changeCursor:@"ZoomCamera"];
-    }
-}
-
-
-- (void) otherMouseUp:(NSEvent*)theEvent
-{
-    if (bManipulatingCamera)
-    {
-        bZoomingCamera = NO;
-        [NSCursor pop];
-    }
-}
-
-
-- (void) otherMouseDragged:(NSEvent*)theEvent
-{
-    if (bManipulatingCamera && bZoomingCamera)
-    {
-        int width = pWindow->getWidth();
-        int height = pWindow->getHeight();
-
-        NSPoint pos = [NSEvent mouseLocation];
-        
-        float x = ((float) (previousMouseLocation.x - pos.x) / width);
-        float y = ((float) (previousMouseLocation.y - pos.y) / height);
-
-		float FOVy = pCamera->getFOVy().valueRadians();
-		float FOVx = FOVy * pCamera->getAspectRatio();
-
-        float z = pCameraAxis->getPosition().z;
-
-        float dx = x * 2.0f * z * (float) MathUtils::Tan(FOVx * 0.5f);
-		float dy = y * 2.0f * z * (float) MathUtils::Tan(FOVy * 0.5f);
-
-		float delta = dx + dy;
-
-		if (z - delta < 0.0f)
-			delta = z - 0.01f;
-
-        [self translateBy:Vector3(0.0f, 0.0f, -delta)];
-        
-        previousMouseLocation = pos;
-    }
 }
 
 @end

@@ -19,8 +19,8 @@ static const char* __CONTEXT__ = "Mesh Viewer State";
 
 /***************************** CONSTRUCTION / DESTRUCTION ******************************/
 
-MeshViewerState::MeshViewerState()
-: m_pEntity(0)
+MeshViewerState::MeshViewerState(NSView* workingZone)
+: m_workingZone(workingZone), m_view3D(nil), m_pEntity(0)
 {
 }
 
@@ -57,7 +57,12 @@ bool MeshViewerState::loadMesh(const std::string& strFileName)
     m_pEntity = pScene->create("Mesh");
 
     Visual::Object* pObject = new Visual::Object("Mesh", m_pEntity->getComponentsList());
-    return pObject->loadMesh(strFileName.substr(offset + 1));
+    if (!pObject->loadMesh(strFileName.substr(offset + 1)))
+        return false;
+    
+    [m_view3D frameAll];
+    
+    return true;
 }
 
 
@@ -66,6 +71,16 @@ bool MeshViewerState::loadMesh(const std::string& strFileName)
 
 void MeshViewerState::enter()
 {
+    NSViewController* controller = [[NSViewController alloc] initWithNibName:@"View3D" bundle:nil];
+    m_view3D = (View3D*) [controller view];
+
+    [m_view3D setFrame:[m_workingZone bounds]];
+
+    [m_workingZone addSubview:m_view3D];
+    
+    [m_view3D setup:@"Perspective"];
+    
+    [[m_workingZone window] makeFirstResponder:m_view3D];
 }
 
 
@@ -82,6 +97,10 @@ void MeshViewerState::exit()
 
     if (pManager->resourceGroupExists("Content"))
         pManager->destroyResourceGroup("Content");
+        
+    [m_view3D removeFromSuperview];
+    [m_view3D release];
+    m_view3D = nil;
 }
 
 

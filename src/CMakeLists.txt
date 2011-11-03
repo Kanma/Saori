@@ -11,10 +11,12 @@ set(SRCS main.mm
          Context.mm
          MeshViewerState.mm
          controls/View3D.mm
+         controls/InteractiveOgreView.mm
 )
 
 # List the Interface Builder Files
 set(XIBS Application
+         View3D
 )
 
 # List the link directories
