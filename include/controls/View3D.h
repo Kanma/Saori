@@ -11,13 +11,13 @@
 {
 @private
     Athena::Entities::Entity*               pCameraController;
-    Athena::Entities::Transforms*           pCameraAxis;
     Athena::Graphics::Visual::Camera*       pCamera;
     Athena::Graphics::Visual::PointLight*   pCameraLight;
     Ogre::RenderWindow*                     pWindow;
     Ogre::Viewport*                         pViewport;
 
     // Camera manipulation
+    float                                   cameraTargetDist;
     BOOL                                    bManipulatingCamera;
     BOOL                                    bMovingCamera;
     BOOL                                    bRotatingCamera;
@@ -35,8 +35,7 @@
 // Methods
 - (void) setup;
 - (void) translateBy:(const Athena::Math::Vector3&)offset;
-- (void) rotateBy:(const Athena::Math::Quaternion&)quat;
-- (void) rotateBy:(const Athena::Math::Degree&)angle around:(const Athena::Math::Vector3&)axis;
+- (void) rotateHorizontallyBy:(const Athena::Math::Degree&)angleHor andVerticallyBy:(const Athena::Math::Degree&)angleVert;
 - (void) frameAll;
 
 @end

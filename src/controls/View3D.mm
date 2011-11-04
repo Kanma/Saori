@@ -86,8 +86,16 @@ using namespace Athena::Math;
 
 - (void) setup
 {
+    // Initialisations
+    cameraTargetDist = 10.0f;
+    bManipulatingCamera = NO;
+    bMovingCamera = NO;
+    bRotatingCamera = NO;
+    bZoomingCamera = NO;
+    vertAngleTotal = 0.0f;
+
+    // Create the render window
     NSRect frame = [self frame];
-    
     pWindow = Engine::getSingletonPtr()->createRenderWindow(
                                                     (size_t) self, "3D view",
                                                     (int) frame.size.width,
@@ -97,33 +105,25 @@ using namespace Athena::Math;
     // Retrieve the scene
     Scene* pScene = [Context context].scene;
 
-    // Create the camera and the viewport
+    // Create the camera controller
     pCameraController = pScene->create("CameraController");
-
-    pCameraAxis = new Transforms("CameraTransforms", pCameraController->getComponentsList());
-    pCameraAxis->translate(0.0f, 0.0f, 10.0f);
+    pCameraController->getTransforms()->translate(0.0f, 0.0f, cameraTargetDist);
 
     pCamera = new Camera("Camera", pCameraController->getComponentsList());
-    pCamera->setTransforms(pCameraAxis);
     pCamera->setNearClipDistance(0.1f);
     pCamera->setFarClipDistance(1000.0f);
     pCamera->setFOVy(Degree(45.0f));
 
     pCameraLight = new PointLight("Light", pCameraController->getComponentsList());
-    pCameraLight->setTransforms(pCameraAxis);
     pCameraLight->setDiffuseColor(Color(0.7f, 0.7f, 0.7f));
 
     pCamera->setAspectRatio(float(window->getWidth()) / window->getHeight());
 
+    // Create the viewport
     pViewport = pCamera->createViewport(window);
     pViewport->setBackgroundColour(Ogre::ColourValue(0.1f, 0.1f, 0.1f));
-    
-    bManipulatingCamera = NO;
-    bMovingCamera = NO;
-    bRotatingCamera = NO;
-    bZoomingCamera = NO;
-    vertAngleTotal = 0.0f;
-    
+
+    // Notifications
     [self setPostsFrameChangedNotifications:YES];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -160,26 +160,46 @@ using namespace Athena::Math;
 {
     assert(pCameraAxis);
     assert(pCameraController);
-    
-    pCameraAxis->translate(0.0f, 0.0f, offset.z);
-    pCameraController->getTransforms()->translate(offset.x, offset.y, 0.0f);
+
+    if (cameraTargetDist + offset.z < 0.01f)
+    {
+        pCameraController->getTransforms()->translate(offset.x, offset.y, -cameraTargetDist + 0.01f);
+        cameraTargetDist = 0.01f;
+    }
+    else
+    {
+        cameraTargetDist += offset.z;
+        pCameraController->getTransforms()->translate(offset.x, offset.y, offset.z);
+    }
 }
 
 
-- (void) rotateBy:(const Athena::Math::Quaternion&)quat
+- (void) rotateHorizontallyBy:(const Athena::Math::Degree&)angleHor andVerticallyBy:(const Athena::Math::Degree&)angleVert;
 {
     assert(pCameraController);
-    
-    pCameraController->getTransforms()->rotate(quat);
-}
 
+    Quaternion cameraOrientation = pCameraController->getTransforms()->getOrientation();
 
-- (void) rotateBy:(const Athena::Math::Degree&)angle around:(const Athena::Math::Vector3&)axis
-{
-    assert(pCameraAxis);
-    assert(pCameraController);
-    
-    pCameraController->getTransforms()->rotate(axis, angle);
+    Vector3 diff = cameraOrientation * Vector3(0.0f, 0.0f, cameraTargetDist);
+    Vector3 finalPos = pCameraController->getTransforms()->getPosition();
+
+    // Perform the up/down rotation
+    Quaternion rotVert(angleVert, cameraOrientation * Vector3::UNIT_X);
+    pCameraController->getTransforms()->rotate(rotVert, Transforms::TS_WORLD);
+
+    Vector3 rotated_diff = rotVert * diff;
+    finalPos -= diff;
+    finalPos += rotated_diff;
+
+    // Perform the orbital rotation
+    Quaternion rotHor(angleHor, Vector3::UNIT_Y);
+    pCameraController->getTransforms()->rotate(rotHor, Transforms::TS_WORLD);
+
+    rotated_diff = rotHor * diff;
+    finalPos -= diff;
+    finalPos += rotated_diff;
+
+    pCameraController->getTransforms()->setPosition(finalPos);
 }
 
 
@@ -217,10 +237,12 @@ using namespace Athena::Math;
     else
         angle = pCamera->getFOVy() * pCamera->getAspectRatio() * 0.5f;
 
+    cameraTargetDist = std::max(boundingRadius / MathUtils::Tan(angle),
+                                boundingRadius + pCamera->getNearClipDistance());
+
     pCameraController->getTransforms()->setPosition(boundingBox.getCenter());
-    pCameraAxis->setPosition(0.0f, 0.0f, std::max(boundingRadius / MathUtils::Tan(angle),
-                                                  boundingRadius + pCamera->getNearClipDistance()));
-    pCameraAxis->setDirection(Vector3::NEGATIVE_UNIT_Z);
+    pCameraController->getTransforms()->setDirection(Vector3::NEGATIVE_UNIT_Z);
+    pCameraController->getTransforms()->translate(0.0f, 0.0f, cameraTargetDist);
     
     vertAngleTotal = 0.0f;
 }
@@ -325,20 +347,20 @@ using namespace Athena::Math;
         int height = pWindow->getHeight();
 
         NSPoint pos = [NSEvent mouseLocation];
-        
+
         float x = ((float) (previousMouseLocation.x - pos.x) / width);
         float y = ((float) (previousMouseLocation.y - pos.y) / height);
 
-		float FOVy = pCamera->getFOVy().valueRadians();
-		float FOVx = FOVy * pCamera->getAspectRatio();
+        float FOVy = pCamera->getFOVy().valueRadians();
+        float FOVx = FOVy * pCamera->getAspectRatio();
 
-        float z = pCameraAxis->getPosition().z;
+        float z = pCameraController->getTransforms()->getPosition().z;
 
         float dx = x * 2.0f * z * (float) MathUtils::Tan(FOVx * 0.5f);
-		float dy = y * 2.0f * z * (float) MathUtils::Tan(FOVy * 0.5f);
+        float dy = y * 2.0f * z * (float) MathUtils::Tan(FOVy * 0.5f);
 
         [self translateBy:Vector3(dx, dy, 0.0f)];
-        
+
         previousMouseLocation = pos;
     }
 }
@@ -375,11 +397,11 @@ using namespace Athena::Math;
 
         NSPoint pos = [NSEvent mouseLocation];
         
-        float x = ((float) (previousMouseLocation.x - pos.x) / width);
-        float y = ((float) (previousMouseLocation.y - pos.y) / height);
+        float x = ((float) (previousMouseLocation.x - pos.x));// / width);
+        float y = ((float) (previousMouseLocation.y - pos.y));// / height);
 
 		// Compute the vertical rotation (stuck between -PI/2 and PI/2)
-		float vertAngle = -2.0f * y;
+		float vertAngle = -0.0035f * y;
 		if (vertAngleTotal + vertAngle < -MathUtils::HALF_PI)
 			vertAngle = -MathUtils::HALF_PI - vertAngleTotal;
 		else if (vertAngleTotal + vertAngle > MathUtils::HALF_PI)
@@ -387,8 +409,7 @@ using namespace Athena::Math;
 		vertAngleTotal += vertAngle;
 
 		// Perform the rotations
-        [self rotateBy:Degree(Radian(2.0f * x)) around:Vector3::UNIT_Y];
-        [self rotateBy:Degree(Radian(vertAngle)) around:Vector3::UNIT_X];
+        [self rotateHorizontallyBy:Degree(Radian(0.0035f * x)) andVerticallyBy:Degree(Radian(vertAngle))];
 
         previousMouseLocation = pos;
     }
@@ -425,25 +446,25 @@ using namespace Athena::Math;
         int height = pWindow->getHeight();
 
         NSPoint pos = [NSEvent mouseLocation];
-        
+
         float x = ((float) (previousMouseLocation.x - pos.x) / width);
         float y = ((float) (previousMouseLocation.y - pos.y) / height);
 
-		float FOVy = pCamera->getFOVy().valueRadians();
-		float FOVx = FOVy * pCamera->getAspectRatio();
+        float FOVy = pCamera->getFOVy().valueRadians();
+        float FOVx = FOVy * pCamera->getAspectRatio();
 
-        float z = pCameraAxis->getPosition().z;
+        float z = pCameraController->getTransforms()->getPosition().z;
 
         float dx = x * 2.0f * z * (float) MathUtils::Tan(FOVx * 0.5f);
-		float dy = y * 2.0f * z * (float) MathUtils::Tan(FOVy * 0.5f);
+        float dy = y * 2.0f * z * (float) MathUtils::Tan(FOVy * 0.5f);
 
-		float delta = dx + dy;
+        float delta = dx + dy;
 
-		if (z - delta < 0.0f)
-			delta = z - 0.01f;
+        if (z - delta < 0.0f)
+            delta = z - 0.01f;
 
         [self translateBy:Vector3(0.0f, 0.0f, -delta)];
-        
+
         previousMouseLocation = pos;
     }
 }
