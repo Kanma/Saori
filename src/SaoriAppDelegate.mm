@@ -13,8 +13,7 @@ using Ogre::WindowEventUtilities;
 
 @synthesize window;
 @synthesize mainOgreView;
-@synthesize view3D;
-@synthesize btnPolygonMode;
+@synthesize workingZone;
 @synthesize statusBar;
 
 
@@ -47,18 +46,13 @@ using Ogre::WindowEventUtilities;
     // Create the scene
     [[Context context] createScene:@"MainScene"];
 
-    // Setup our views
-    [view3D setup];
-
     // Create our gamestate
     GameStateManager* pGameStateManager = engine.getGameStateManager();
 
-    pMeshViewerState = new MeshViewerState();
+    pMeshViewerState = new MeshViewerState(workingZone);
 
     pGameStateManager->registerState(1, pMeshViewerState);
     pGameStateManager->pushState(1);
-
-    [window makeFirstResponder:view3D];
 
 	// Create a timer to render at 50fps
 	[NSTimer scheduledTimerWithTimeInterval:0.02 target:self
@@ -87,37 +81,13 @@ using Ogre::WindowEventUtilities;
     if ([op runModal] == NSOKButton)
     {
         NSString* filename = [op filename];
-        if (pMeshViewerState->loadMesh([filename UTF8String]))
-            [view3D frameAll];
+        if (!pMeshViewerState->loadMesh([filename UTF8String]))
+        {
+            NSRunInformationalAlertPanel(@"ERROR",
+                                         [NSString stringWithFormat:@"Failed to load the file '%@'", filename],
+                                         @"OK", nil, nil);
+        }
     }
-}
-
-
-- (IBAction) changePolygonMode:(id)sender
-{
-    switch ([sender selectedSegment])
-    {
-        case 0: view3D.polygonMode = Ogre::PM_SOLID; break;
-        case 1: view3D.polygonMode = Ogre::PM_WIREFRAME; break;
-        case 2: view3D.polygonMode = Ogre::PM_POINTS; break;
-    }
-}
-
-
-- (IBAction) toggleCameraLight:(id)sender
-{
-    view3D.lightEnabled = ([sender state] == NSOnState);
-}
-
-
-- (IBAction) changeCameraLightColor:(id)sender
-{
-    Math::Color color;
-
-    NSColor* rgbColor = [[sender color] colorUsingColorSpaceName:NSCalibratedRGBColorSpace];
-    [rgbColor getRed:&color.r green:&color.g blue:&color.b alpha:&color.a];
-
-    view3D.lightColor = color;
 }
 
 @end

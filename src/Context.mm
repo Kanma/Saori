@@ -27,6 +27,12 @@ Context* gContext = [[Context alloc] init];
 @synthesize scene;
 
 
+- (tCameraControl*) cameraControl
+{
+    return &cameraControl;
+}
+
+
 /*************************************** METHODS ****************************************/
 
 - (id) init
