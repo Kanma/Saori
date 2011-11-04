@@ -10,6 +10,7 @@
     NSWindow*        window;
     OgreView*        mainOgreView;
     NSView*          workingZone;
+    NSScrollView*    toolPanelScroller;
     NSTextView*      statusBar;
 
     // Attributes
@@ -18,10 +19,11 @@
 }
 
 // Outlets
-@property (assign) IBOutlet NSWindow* window;
-@property (assign) IBOutlet OgreView* mainOgreView;
-@property (assign) IBOutlet NSView*   workingZone;
-@property (assign) NSTextView*        statusBar;
+@property (assign) IBOutlet NSWindow*       window;
+@property (assign) IBOutlet OgreView*       mainOgreView;
+@property (assign) IBOutlet NSView*         workingZone;
+@property (assign) IBOutlet NSScrollView*   toolPanelScroller;
+@property (assign) NSTextView*              statusBar;
 
 // Actions
 - (IBAction) openFile:(id)sender;

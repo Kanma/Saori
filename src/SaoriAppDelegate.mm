@@ -14,6 +14,7 @@ using Ogre::WindowEventUtilities;
 @synthesize window;
 @synthesize mainOgreView;
 @synthesize workingZone;
+@synthesize toolPanelScroller;
 @synthesize statusBar;
 
 
