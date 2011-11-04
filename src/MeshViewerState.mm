@@ -79,8 +79,6 @@ void MeshViewerState::enter()
     [m_workingZone addSubview:m_view3D];
     
     [m_view3D setup:@"Perspective"];
-    
-    [[m_workingZone window] makeFirstResponder:m_view3D];
 }
 
 

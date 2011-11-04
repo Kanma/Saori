@@ -58,6 +58,8 @@ using Ogre::WindowEventUtilities;
 	[NSTimer scheduledTimerWithTimeInterval:0.02 target:self
 	                               selector:@selector(stepOneFrame)
 	                               userInfo:NULL repeats:YES];
+	
+    [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
 }
 
 

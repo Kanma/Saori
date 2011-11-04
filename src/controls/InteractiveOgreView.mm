@@ -39,6 +39,8 @@ using namespace Athena::Math;
     cursorRotateCamera    = [self loadCursor:@"RotateCamera"];
     cursorZoomCamera      = [self loadCursor:@"ZoomCamera"];
     
+    [self addTrackingRect:frame owner:self userData:0 assumeInside:NO];
+    
     return self;
 }
 
@@ -61,6 +63,29 @@ using namespace Athena::Math;
     hotSpot.y = image.size.height / 2;
 
     return [[NSCursor alloc] initWithImage:image hotSpot:hotSpot];
+}
+
+
+- (BOOL) mouseDownCanMoveWindow
+{
+    return NO;
+}
+
+
+- (BOOL) acceptsFirstMouse:(NSEvent*)theEvent
+{
+    return YES;
+}
+
+
+- (void) mouseEntered:(NSEvent*)theEvent
+{
+    [[self window] makeFirstResponder:self];
+}
+
+
+- (void) mouseExited:(NSEvent*)theEvent
+{
 }
 
 
