@@ -11,6 +11,13 @@ using namespace Athena::Graphics::Visual;
 using namespace Athena::Math;
 
 
+@interface InteractiveOgreView ()
+
+- (NSCursor*) loadCursor:(NSString*)name;
+
+@end
+
+
 @implementation InteractiveOgreView
 
 /*************************************** METHODS ****************************************/
@@ -28,6 +35,10 @@ using namespace Athena::Math;
     pCameraTransforms   = 0;
     pCamera             = 0;
     
+    cursorTranslateCamera = [self loadCursor:@"TranslateCamera"];
+    cursorRotateCamera    = [self loadCursor:@"RotateCamera"];
+    cursorZoomCamera      = [self loadCursor:@"ZoomCamera"];
+    
     return self;
 }
 
@@ -40,7 +51,7 @@ using namespace Athena::Math;
 }
 
 
-- (void) changeCursor:(NSString*)name
+- (NSCursor*) loadCursor:(NSString*)name
 {
     NSString* path = [[[NSBundle mainBundle] bundlePath] stringByAppendingFormat:@"/Contents/Resources/Cursors/%@.png",name];
     NSImage* image = [[NSImage alloc] initWithContentsOfFile:path];
@@ -49,9 +60,7 @@ using namespace Athena::Math;
     hotSpot.x = image.size.width / 2;
     hotSpot.y = image.size.height / 2;
 
-    NSCursor* cursor = [[NSCursor alloc] initWithImage:image hotSpot:hotSpot];
-
-    [cursor push];
+    return [[NSCursor alloc] initWithImage:image hotSpot:hotSpot];
 }
 
 
@@ -116,7 +125,7 @@ using namespace Athena::Math;
         cc->status = CCS_MOVING;
         previousMouseLocation = [NSEvent mouseLocation];
         
-        [self changeCursor:@"TranslateCamera"];
+        [cursorTranslateCamera push];
     }
 }
 
@@ -170,7 +179,7 @@ using namespace Athena::Math;
         cc->status = CCS_ROTATING;
         previousMouseLocation = [NSEvent mouseLocation];
         
-        [self changeCursor:@"RotateCamera"];
+        [cursorRotateCamera push];
     }
 }
 
@@ -226,7 +235,7 @@ using namespace Athena::Math;
         cc->status = CCS_ZOOMING;
         previousMouseLocation = [NSEvent mouseLocation];
         
-        [self changeCursor:@"ZoomCamera"];
+        [cursorZoomCamera push];
     }
 }
 

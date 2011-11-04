@@ -11,6 +11,10 @@
     Athena::Entities::Transforms*     pCameraTransforms;
     Athena::Graphics::Visual::Camera* pCamera;
     NSPoint                           previousMouseLocation;
+    
+    NSCursor*                         cursorTranslateCamera;
+    NSCursor*                         cursorRotateCamera;
+    NSCursor*                         cursorZoomCamera;
 }
 
 - (void) setupwithCamera:(Athena::Graphics::Visual::Camera*)camera
