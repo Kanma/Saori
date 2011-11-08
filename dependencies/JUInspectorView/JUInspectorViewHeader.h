@@ -30,6 +30,9 @@
 {    
     id<JUInspectorViewHeaderDelegate> delegate;
     
+    NSInteger state;
+    NSString* title;
+    
     NSButton *disclosureTriangle;
     NSTextField *nameField;
     

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D481A42D1465457800E2DB26 /* ResourcesPanel.xib in Resources */ = {isa = PBXBuildFile; fileRef = D481A42C1465457800E2DB26 /* ResourcesPanel.xib */; };
 		D4A8F9551462958C003BE5B3 /* View3D.xib in Resources */ = {isa = PBXBuildFile; fileRef = D4A8F9541462958C003BE5B3 /* View3D.xib */; };
 		D4A8F95A14629878003BE5B3 /* Application.xib in Resources */ = {isa = PBXBuildFile; fileRef = D4A8F95914629878003BE5B3 /* Application.xib */; };
 		D4B58B9A14601D6E007CFF84 /* View3D.mm in Sources */ = {isa = PBXBuildFile; fileRef = D4B58B9914601D6E007CFF84 /* View3D.mm */; };
@@ -21,6 +22,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		D472F3E614692272002D1811 /* JUInspectorView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JUInspectorView.h; path = ../dependencies/JUInspectorView/JUInspectorView.h; sourceTree = SOURCE_ROOT; };
+		D481A42C1465457800E2DB26 /* ResourcesPanel.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ResourcesPanel.xib; sourceTree = "<group>"; };
+		D481A42F146546C600E2DB26 /* ResourcesPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ResourcesPanel.h; path = ../include/controls/ResourcesPanel.h; sourceTree = SOURCE_ROOT; };
+		D481A4301465C7C200E2DB26 /* ToolPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ToolPanel.h; path = ../include/controls/ToolPanel.h; sourceTree = SOURCE_ROOT; };
 		D4A8F9541462958C003BE5B3 /* View3D.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = View3D.xib; sourceTree = SOURCE_ROOT; };
 		D4A8F95914629878003BE5B3 /* Application.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Application.xib; sourceTree = "<group>"; };
 		D4B58B9714601D4C007CFF84 /* View3D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = View3D.h; path = ../include/controls/View3D.h; sourceTree = SOURCE_ROOT; };
@@ -29,6 +34,7 @@
 		D4D12FA11461E9BB00912EA8 /* Icon_Points.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon_Points.png; sourceTree = "<group>"; };
 		D4D12FA21461E9BB00912EA8 /* Icon_Wireframe.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon_Wireframe.png; sourceTree = "<group>"; };
 		D4DD8C4A1461F7AA00AD1162 /* Icon_Light.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon_Light.png; sourceTree = "<group>"; };
+		D4E10E891469AC6A007E7018 /* JUInspectorBaseView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JUInspectorBaseView.h; path = ../dependencies/JUInspectorView/JUInspectorBaseView.h; sourceTree = SOURCE_ROOT; };
 		ED9AF5D81457E450004259CB /* Saori.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Saori.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED9AF5DC1457E450004259CB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		ED9AF5DF1457E450004259CB /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -55,9 +61,10 @@
 		D4D12F9D1461E85D00912EA8 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				D4D12FA51461EBB100912EA8 /* Icons */,
 				D4A8F95914629878003BE5B3 /* Application.xib */,
 				D4A8F9541462958C003BE5B3 /* View3D.xib */,
-				D4D12FA51461EBB100912EA8 /* Icons */,
+				D481A42C1465457800E2DB26 /* ResourcesPanel.xib */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -113,6 +120,10 @@
 		ED9AF5E21457E450004259CB /* Saori */ = {
 			isa = PBXGroup;
 			children = (
+				D4E10E891469AC6A007E7018 /* JUInspectorBaseView.h */,
+				D472F3E614692272002D1811 /* JUInspectorView.h */,
+				D481A4301465C7C200E2DB26 /* ToolPanel.h */,
+				D481A42F146546C600E2DB26 /* ResourcesPanel.h */,
 				D4B58B9914601D6E007CFF84 /* View3D.mm */,
 				D4B58B9714601D4C007CFF84 /* View3D.h */,
 				EDE998CE1457E7C300C72C3E /* main.mm */,
@@ -121,7 +132,7 @@
 				ED9AF5FA1457E471004259CB /* Info.plist */,
 			);
 			path = Saori;
-			sourceTree = "<group>";
+			sourceTree = SOURCE_ROOT;
 		};
 /* End PBXGroup section */
 
@@ -180,6 +191,7 @@
 				D4DD8C4B1461F7AA00AD1162 /* Icon_Light.png in Resources */,
 				D4A8F9551462958C003BE5B3 /* View3D.xib in Resources */,
 				D4A8F95A14629878003BE5B3 /* Application.xib in Resources */,
+				D481A42D1465457800E2DB26 /* ResourcesPanel.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

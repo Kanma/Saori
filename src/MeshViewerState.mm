@@ -5,6 +5,7 @@
 #import <Athena-Entities/Transforms.h>
 #import <Athena-Graphics/Visual/Object.h>
 #import <Ogre/OgreResourceGroupManager.h>
+#import <controls/ResourcesPanel.h>
 
 
 using namespace Athena;
@@ -19,8 +20,9 @@ static const char* __CONTEXT__ = "Mesh Viewer State";
 
 /***************************** CONSTRUCTION / DESTRUCTION ******************************/
 
-MeshViewerState::MeshViewerState(NSView* workingZone)
-: m_workingZone(workingZone), m_view3D(nil), m_pEntity(0)
+MeshViewerState::MeshViewerState(NSView* workingZone, ToolPanel* toolPanel)
+: m_workingZone(workingZone), m_toolPanel(toolPanel), m_view3D(nil),
+  m_pEntity(0)
 {
 }
 
@@ -71,6 +73,7 @@ bool MeshViewerState::loadMesh(const std::string& strFileName)
 
 void MeshViewerState::enter()
 {
+    // Setup the 3D view
     NSViewController* controller = [[NSViewController alloc] initWithNibName:@"View3D" bundle:nil];
     m_view3D = (View3D*) [controller view];
 
@@ -79,6 +82,9 @@ void MeshViewerState::enter()
     [m_workingZone addSubview:m_view3D];
     
     [m_view3D setup:@"Perspective"];
+
+    // Setup the panels
+    [m_toolPanel addPanelFromNib:@"ResourcesPanel" withName:@"Resources"];
 }
 
 

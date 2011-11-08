@@ -202,7 +202,6 @@ using namespace Athena::Math;
 
 - (void) translateCameraBy:(const Athena::Math::Vector3&)offset
 {
-    assert(pCameraAxis);
     assert(pCameraController);
 
     tCameraControl* cc = [Context context].cameraControl;
@@ -252,9 +251,6 @@ using namespace Athena::Math;
 
 - (void) frameAll
 {
-    // Assertions
-    assert(pScene);
-    
     // Declarations
     AxisAlignedBox boundingBox;
     float boundingRadius = 0.0f;

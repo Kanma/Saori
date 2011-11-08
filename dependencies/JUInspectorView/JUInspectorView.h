@@ -24,6 +24,7 @@
 {
     BOOL expanded;
     
+    NSString* name;
     NSInteger index;
     NSView *body;
     

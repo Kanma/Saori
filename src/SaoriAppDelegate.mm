@@ -11,13 +11,6 @@ using Ogre::WindowEventUtilities;
 
 @implementation SaoriAppDelegate
 
-@synthesize window;
-@synthesize mainOgreView;
-@synthesize workingZone;
-@synthesize toolPanelScroller;
-@synthesize statusBar;
-
-
 - (void) applicationDidFinishLaunching:(NSNotification*)aNotification
 {
     // Create the text view of the status bar
@@ -50,7 +43,7 @@ using Ogre::WindowEventUtilities;
     // Create our gamestate
     GameStateManager* pGameStateManager = engine.getGameStateManager();
 
-    pMeshViewerState = new MeshViewerState(workingZone);
+    pMeshViewerState = new MeshViewerState(workingZone, toolPanel);
 
     pGameStateManager->registerState(1, pMeshViewerState);
     pGameStateManager->pushState(1);

@@ -7,23 +7,17 @@
 {
 @private
     // UI
-    NSWindow*        window;
-    OgreView*        mainOgreView;
-    NSView*          workingZone;
-    NSScrollView*    toolPanelScroller;
-    NSTextView*      statusBar;
+    IBOutlet NSWindow*                   window;
+    IBOutlet OgreView*                   mainOgreView;
+    IBOutlet NSView*                     workingZone;
+    IBOutlet NSScrollView*               toolPanelScroller;
+    IBOutlet JUInspectorViewContainer*   toolPanel;
+    NSTextView*                          statusBar;
 
     // Attributes
     Athena::Engine   engine;
     MeshViewerState* pMeshViewerState;
 }
-
-// Outlets
-@property (assign) IBOutlet NSWindow*       window;
-@property (assign) IBOutlet OgreView*       mainOgreView;
-@property (assign) IBOutlet NSView*         workingZone;
-@property (assign) IBOutlet NSScrollView*   toolPanelScroller;
-@property (assign) NSTextView*              statusBar;
 
 // Actions
 - (IBAction) openFile:(id)sender;

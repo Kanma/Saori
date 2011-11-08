@@ -12,11 +12,18 @@ set(SRCS main.mm
          MeshViewerState.mm
          controls/View3D.mm
          controls/InteractiveOgreView.mm
+         controls/ToolPanel.mm
+         controls/ResourcesPanel.mm
+         "${SAORI_SOURCE_DIR}/dependencies/JUInspectorView/JUInspectorBaseView.m"
+         "${SAORI_SOURCE_DIR}/dependencies/JUInspectorView/JUInspectorView.m"
+         "${SAORI_SOURCE_DIR}/dependencies/JUInspectorView/JUInspectorViewContainer.m"
+         "${SAORI_SOURCE_DIR}/dependencies/JUInspectorView/JUInspectorViewHeader.m"
 )
 
 # List the Interface Builder Files
 set(XIBS Application
          View3D
+         ResourcesPanel
 )
 
 # List the link directories
