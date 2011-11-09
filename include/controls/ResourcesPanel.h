@@ -6,6 +6,8 @@
     IBOutlet NSBrowser* browser;
     IBOutlet NSButton*  btnAdd;
     IBOutlet NSButton*  btnRemove;
+
+    NSMutableArray*     locations;
 }
 
 @end

@@ -5,7 +5,6 @@
 #import <Athena-Entities/Transforms.h>
 #import <Athena-Graphics/Visual/Object.h>
 #import <Ogre/OgreResourceGroupManager.h>
-#import <controls/ResourcesPanel.h>
 
 
 using namespace Athena;
@@ -63,7 +62,11 @@ bool MeshViewerState::loadMesh(const std::string& strFileName)
         return false;
     
     [m_view3D frameAll];
+
     
+    // Send a notification about the resources group
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"SaoriResourcesGroupChanged" object:nil];
+
     return true;
 }
 
