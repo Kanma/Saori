@@ -4,6 +4,8 @@
 {
 @private
     IBOutlet NSBrowser* browser;
+    IBOutlet NSButton*  btnAdd;
+    IBOutlet NSButton*  btnRemove;
 }
 
 @end
