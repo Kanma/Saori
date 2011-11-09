@@ -65,7 +65,10 @@ bool MeshViewerState::loadMesh(const std::string& strFileName)
 
     
     // Send a notification about the resources group
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"SaoriResourcesGroupChanged" object:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"SaoriResourceGroupUpdated"
+                                                        object:nil
+                                                        userInfo:[NSDictionary dictionaryWithObject:@"Content"
+                                                                                             forKey:@"groupName"]];
 
     return true;
 }

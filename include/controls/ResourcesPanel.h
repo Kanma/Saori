@@ -1,13 +1,13 @@
 #import <Cocoa/Cocoa.h>
 
-@interface ResourcesPanel: NSView <NSBrowserDelegate>
+@interface ResourcesPanel: NSView <NSOutlineViewDataSource, NSOutlineViewDelegate>
 {
 @private
-    IBOutlet NSBrowser* browser;
-    IBOutlet NSButton*  btnAdd;
-    IBOutlet NSButton*  btnRemove;
+    IBOutlet NSOutlineView* list;
+    IBOutlet NSButton*      btnAdd;
+    IBOutlet NSButton*      btnRemove;
 
-    NSMutableArray*     locations;
+    NSMutableArray*         groups;
 }
 
 @end
