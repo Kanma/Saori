@@ -48,10 +48,10 @@ using Ogre::WindowEventUtilities;
     pGameStateManager->registerState(1, pMeshViewerState);
     pGameStateManager->pushState(1);
 
-	// Create a timer to render at 50fps
-	[NSTimer scheduledTimerWithTimeInterval:0.02 target:self
-	                               selector:@selector(stepOneFrame)
-	                               userInfo:NULL repeats:YES];
+	// Create a timer to render at 25fps
+    [NSTimer scheduledTimerWithTimeInterval:0.04 target:self
+                                   selector:@selector(stepOneFrame)
+                                   userInfo:NULL repeats:YES];
 	
     [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
 }
@@ -62,7 +62,7 @@ using Ogre::WindowEventUtilities;
 	try
 	{
 	    WindowEventUtilities::messagePump();
-		engine.getTaskManager()->step(20000);
+		engine.getTaskManager()->step(40000);
 	}
 	catch (Ogre::Exception& e)
 	{

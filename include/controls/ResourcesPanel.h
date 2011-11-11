@@ -1,6 +1,8 @@
 #import <Cocoa/Cocoa.h>
+#import <controls/Panel.h>
 
-@interface ResourcesPanel: NSView <NSOutlineViewDataSource, NSOutlineViewDelegate>
+
+@interface ResourcesPanel: Panel <NSOutlineViewDataSource, NSOutlineViewDelegate>
 {
 @private
     IBOutlet NSOutlineView* list;

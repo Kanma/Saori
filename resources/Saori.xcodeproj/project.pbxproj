@@ -18,6 +18,7 @@
 		ED9AF5DD1457E450004259CB /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED9AF5DC1457E450004259CB /* Cocoa.framework */; };
 		ED9AF5FC1457E471004259CB /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = ED9AF5FA1457E471004259CB /* Info.plist */; };
 		ED9AF5FF1457E518004259CB /* SaoriAppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = ED9AF5FE1457E518004259CB /* SaoriAppDelegate.mm */; };
+		EDACD9B2146D542F00B978BE /* SceneExplorerPanel.xib in Resources */ = {isa = PBXBuildFile; fileRef = EDACD9B1146D542F00B978BE /* SceneExplorerPanel.xib */; };
 		EDE998CF1457E7C300C72C3E /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = EDE998CE1457E7C300C72C3E /* main.mm */; };
 /* End PBXBuildFile section */
 
@@ -43,6 +44,8 @@
 		ED9AF5FA1457E471004259CB /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = SOURCE_ROOT; };
 		ED9AF5FD1457E4A6004259CB /* SaoriAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SaoriAppDelegate.h; path = ../include/SaoriAppDelegate.h; sourceTree = SOURCE_ROOT; };
 		ED9AF5FE1457E518004259CB /* SaoriAppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = SaoriAppDelegate.mm; path = ../src/SaoriAppDelegate.mm; sourceTree = SOURCE_ROOT; };
+		EDACD9B1146D542F00B978BE /* SceneExplorerPanel.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SceneExplorerPanel.xib; sourceTree = "<group>"; };
+		EDACD9B4146D60E700B978BE /* SceneExplorerPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SceneExplorerPanel.h; path = ../include/controls/SceneExplorerPanel.h; sourceTree = SOURCE_ROOT; };
 		EDE998CE1457E7C300C72C3E /* main.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = main.mm; path = ../src/main.mm; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
@@ -65,6 +68,7 @@
 				D4A8F95914629878003BE5B3 /* Application.xib */,
 				D4A8F9541462958C003BE5B3 /* View3D.xib */,
 				D481A42C1465457800E2DB26 /* ResourcesPanel.xib */,
+				EDACD9B1146D542F00B978BE /* SceneExplorerPanel.xib */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -120,6 +124,7 @@
 		ED9AF5E21457E450004259CB /* Saori */ = {
 			isa = PBXGroup;
 			children = (
+				EDACD9B4146D60E700B978BE /* SceneExplorerPanel.h */,
 				D4E10E891469AC6A007E7018 /* JUInspectorBaseView.h */,
 				D472F3E614692272002D1811 /* JUInspectorView.h */,
 				D481A4301465C7C200E2DB26 /* ToolPanel.h */,
@@ -192,6 +197,7 @@
 				D4A8F9551462958C003BE5B3 /* View3D.xib in Resources */,
 				D4A8F95A14629878003BE5B3 /* Application.xib in Resources */,
 				D481A42D1465457800E2DB26 /* ResourcesPanel.xib in Resources */,
+				EDACD9B2146D542F00B978BE /* SceneExplorerPanel.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

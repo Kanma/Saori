@@ -91,6 +91,7 @@ void MeshViewerState::enter()
 
     // Setup the panels
     [m_toolPanel addPanelFromNib:@"ResourcesPanel" withName:@"Resources"];
+    [m_toolPanel addPanelFromNib:@"SceneExplorerPanel" withName:@"Scene Explorer"];
 }
 
 

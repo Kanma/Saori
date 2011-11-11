@@ -249,6 +249,15 @@
 }
 
 
+/******************************* IMPLEMENTATION OF Panel ********************************/
+
+- (void) setup
+{
+    NSTableColumn* column = [[list tableColumns] objectAtIndex:0];
+	[column.dataCell setFont:[NSFont systemFontOfSize:[NSFont smallSystemFontSize]]];
+}
+
+
 /********************** IMPLEMENTATION OF NSOutlineViewDataSource ***********************/
 
 - (id) outlineView:(NSOutlineView*)outlineView child:(NSInteger)index ofItem:(id)item

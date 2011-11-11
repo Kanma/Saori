@@ -1,4 +1,5 @@
 #import <controls/ToolPanel.h>
+#import <controls/Panel.h>
 #import <JUInspectorView/JUInspectorView.h>
 
 
@@ -16,6 +17,8 @@
     [self addInspectorView:view expanded:YES];
 
     [controllers addObject:controller];
+    
+    [(Panel*) view.body setup];
 }
 
 @end

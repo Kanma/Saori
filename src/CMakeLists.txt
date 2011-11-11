@@ -13,17 +13,21 @@ set(SRCS main.mm
          controls/View3D.mm
          controls/InteractiveOgreView.mm
          controls/ToolPanel.mm
+         controls/Panel.mm
          controls/ResourcesPanel.mm
+         controls/SceneExplorerPanel.mm
          "${SAORI_SOURCE_DIR}/dependencies/JUInspectorView/JUInspectorBaseView.m"
          "${SAORI_SOURCE_DIR}/dependencies/JUInspectorView/JUInspectorView.m"
          "${SAORI_SOURCE_DIR}/dependencies/JUInspectorView/JUInspectorViewContainer.m"
          "${SAORI_SOURCE_DIR}/dependencies/JUInspectorView/JUInspectorViewHeader.m"
+         "${SAORI_SOURCE_DIR}/dependencies/Apple/ImageAndTextCell.mm"
 )
 
 # List the Interface Builder Files
 set(XIBS Application
          View3D
          ResourcesPanel
+         SceneExplorerPanel
 )
 
 # List the link directories
@@ -85,6 +89,8 @@ add_custom_command(TARGET saori POST_BUILD
   COMMAND ln ARGS -s -f ${SAORI_SOURCE_DIR}/resources/Icons/Icon_Wireframe.png ${CONTENTS_PATH}/Resources/
   COMMAND ln ARGS -s -f ${SAORI_SOURCE_DIR}/resources/Icons/Icon_Points.png ${CONTENTS_PATH}/Resources/
   COMMAND ln ARGS -s -f ${SAORI_SOURCE_DIR}/resources/Icons/Icon_Light.png ${CONTENTS_PATH}/Resources/
+  COMMAND ln ARGS -s -f ${SAORI_SOURCE_DIR}/resources/Icons/Icon_Folder_Open.png ${CONTENTS_PATH}/Resources/
+  COMMAND ln ARGS -s -f ${SAORI_SOURCE_DIR}/resources/Icons/Icon_Folder_Closed.png ${CONTENTS_PATH}/Resources/
 )
 
 # Symlink the plugins
