@@ -10,4 +10,7 @@
     NSMutableArray*         groups;
 }
 
+- (IBAction) addLocations:(id)sender;
+- (IBAction) removeSelectedLocations:(id)sender;
+
 @end

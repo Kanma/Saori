@@ -7,6 +7,7 @@
 @public
     NSString*       name;
     NSMutableArray* locations;
+    BOOL            removable;
 }
 
 @end
@@ -19,7 +20,7 @@
 
 @interface ResourcesPanel ()
 
-- (void) updateResourceGroup:(NSString*)name;
+- (void) updateResourceGroup:(NSString*)name removable:(BOOL)removable;
 - (ResourceGroup*) getResourceGroup:(NSString*)name;
 
 @end
@@ -37,7 +38,7 @@
     {
         groups = [[NSMutableArray alloc] initWithCapacity:10];
 
-        [self updateResourceGroup:@"General"];
+        [self updateResourceGroup:@"General" removable:NO];
 
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(resourceGroupUpdated:)
@@ -49,13 +50,133 @@
 }
 
 
-- (void) resourceGroupUpdated:(NSNotification*)notification
+- (IBAction) addLocations:(id)sender
 {
-    [self updateResourceGroup:[notification.userInfo objectForKey:@"groupName"]];
+    NSOpenPanel* openDlg = [NSOpenPanel openPanel];
+
+    [openDlg setCanChooseFiles:YES];
+    [openDlg setCanChooseDirectories:YES];
+    openDlg.allowsMultipleSelection = YES;
+
+    if ([openDlg runModalForDirectory:nil file:nil] == NSOKButton)
+    {
+        Ogre::ResourceGroupManager* pManager = Ogre::ResourceGroupManager::getSingletonPtr();
+
+        if (pManager->resourceGroupExists("User"))
+            pManager->clearResourceGroup("User");
+        else
+            pManager->createResourceGroup("User");
+
+        ResourceGroup* group = [self getResourceGroup:@"User"];
+        if (group)
+        {
+            for (int i = 0; i < [group->locations count]; ++i)
+            {
+                NSString* item = [group->locations objectAtIndex:i];
+                
+                if (!pManager->resourceLocationExists([item UTF8String], "User"))
+                {
+                    if ([item hasSuffix:@".zip"])
+                        pManager->addResourceLocation([item UTF8String], "Zip", "User");
+                    else
+                        pManager->addResourceLocation([item UTF8String], "FileSystem", "User");
+                }
+            }
+        }
+        
+        NSArray* files = [openDlg filenames];
+        for (int i = 0; i < [files count]; ++i)
+        {
+            NSString* fileName = [files objectAtIndex:i];
+
+            if (!pManager->resourceLocationExists([fileName UTF8String], "User"))
+            {
+                if ([fileName hasSuffix:@".zip"])
+                    pManager->addResourceLocation([fileName UTF8String], "Zip", "User");
+                else
+                    pManager->addResourceLocation([fileName UTF8String], "FileSystem", "User");
+            }
+        }
+        
+        try
+        {
+            pManager->initialiseResourceGroup("User");
+        }
+        catch (Ogre::Exception ex)
+        {
+            NSRunInformationalAlertPanel(@"ERROR",
+                                         [NSString stringWithFormat:@"Failed to add the resource locations.\n\nDetails:\n%@",
+                                                                    [NSString stringWithUTF8String:ex.getFullDescription().c_str()]],
+                                         @"OK", nil, nil);
+            
+            pManager->clearResourceGroup("User");
+
+            for (int i = 0; i < [files count]; ++i)
+                pManager->removeResourceLocation([[files objectAtIndex:i] UTF8String], "User");
+
+            pManager->initialiseResourceGroup("User");
+        }
+
+        [self updateResourceGroup:@"User" removable:YES];
+    }
 }
 
 
-- (void) updateResourceGroup:(NSString*)name
+- (IBAction) removeSelectedLocations:(id)sender
+{
+    Ogre::ResourceGroupManager* pManager = Ogre::ResourceGroupManager::getSingletonPtr();
+    if (!pManager)
+        return;
+
+    NSIndexSet* selection = [list selectedRowIndexes];
+    NSMutableArray* cleared = [[NSMutableArray alloc] initWithCapacity:10];
+
+    [selection enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL* stop) {
+        id item = [list itemAtRow:idx];
+
+	    if ([item isKindOfClass:[ResourceGroup class]])
+	    {
+		    ResourceGroup* group = (ResourceGroup*) item;
+
+            if (pManager->resourceGroupExists([group->name UTF8String]))
+                pManager->destroyResourceGroup([group->name UTF8String]);
+
+            [self updateResourceGroup:group->name removable:YES];
+
+            *stop = YES;
+        }
+        else
+        {
+            ResourceGroup* group = (ResourceGroup*) [list parentForItem:item];
+            
+            if (![cleared containsObject:group->name])
+            {
+                pManager->clearResourceGroup([group->name UTF8String]);
+                [cleared addObject:group->name];
+            }
+
+            pManager->removeResourceLocation([item UTF8String], [group->name UTF8String]);
+        }
+    }];
+
+    for (int i = 0; i < [cleared count]; ++i)
+    {
+        NSString* name = (NSString* )[cleared objectAtIndex:i];
+        pManager->initialiseResourceGroup([name UTF8String]);
+        [self updateResourceGroup:name removable:YES];
+    }
+
+    [cleared release];
+}
+
+
+- (void) resourceGroupUpdated:(NSNotification*)notification
+{
+    [self updateResourceGroup:[notification.userInfo objectForKey:@"groupName"] removable:NO];
+}
+
+
+- (void) updateResourceGroup:(NSString*)name removable:(BOOL)removable
 {
     ResourceGroup* group = [self getResourceGroup:name];
     BOOL newGroup = NO;
@@ -68,6 +189,7 @@
             group = [[ResourceGroup alloc] init];
             group->name = name;
             group->locations = nil;
+            group->removable = removable;
             
             newGroup = YES;
             
@@ -174,7 +296,7 @@
 
 /*********************** IMPLEMENTATION OF NSOutlineViewDelegate ************************/
 
-- (void) outlineViewItemDidCollapse: (NSNotification*)notification
+- (void) outlineViewItemDidCollapse:(NSNotification*)notification
 {
     NSTableColumn* column = [[list tableColumns] objectAtIndex:0];
 
@@ -210,9 +332,24 @@
 }
 
 
-- (void) outlineViewItemDidExpand: (NSNotification*)notification
+- (void) outlineViewItemDidExpand:(NSNotification*)notification
 {
     [self outlineViewItemDidCollapse:notification];
+}
+
+
+- (void) outlineViewSelectionDidChange:(NSNotification*)notification
+{
+    [btnRemove setEnabled:([list numberOfSelectedRows] > 0)];
+}
+
+
+- (BOOL) outlineView:(NSOutlineView*)outlineView shouldSelectItem:(id)item
+{
+    if ([item isKindOfClass:[ResourceGroup class]])
+        return ((ResourceGroup*) item)->removable;
+
+    return ((ResourceGroup*) [list parentForItem:item])->removable;
 }
 
 @end
